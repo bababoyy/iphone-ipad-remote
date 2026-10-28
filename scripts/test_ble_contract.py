@@ -14,7 +14,7 @@ for suffix in ("801","802","803"):
 assert plist["NSBluetoothAlwaysUsageDescription"]
 assert "VCGamepadInject" in ipad and "VCGamepadSetActive" in ipad
 assert "kFrameTimeout = 0.40" in ipad, "Missing neutral watchdog"
-assert "writeWithoutResponse" in ipad and "canSendWriteWithoutResponse" in phone
+assert "CBCharacteristicPropertyWriteWithoutResponse" in ipad and "canSendWriteWithoutResponse" in phone
 assert "maximumWriteValueLength" in phone
 assert "WebSocket=Socket" in bridge
 assert "NSBluetoothAlwaysUsageDescription" not in bridge
