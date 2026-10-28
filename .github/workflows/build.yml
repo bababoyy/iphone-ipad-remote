@@ -10,6 +10,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Check controller protocol and JS syntax
         run: python3 scripts/check_controller.py
+      - name: Check BLE source and packet contract
+        run: python3 scripts/test_ble_contract.py
       - name: Embed controller page
         run: python3 scripts/embed.py
       - name: Compile iOS arm64
@@ -41,6 +43,8 @@ jobs:
           node --check iphone-app/NativeBridge.js
       - name: Build unsigned iPhone IPA
         run: bash scripts/build_ble_ipa.sh
+      - name: Check unsigned IPA contents
+        run: python3 scripts/inspect_ipa.py
       - uses: actions/upload-artifact@v4
         with:
           name: VCRemoteBLE-unsigned
