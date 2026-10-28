@@ -15,6 +15,14 @@ assert 'bindStick(byId(\'rightStick\'),\'RS\')' in html
 assert "id > (gamepadEvent ? 18 : 12)" in server
 for name in ["GCInputButtonA","GCInputButtonB","GCInputButtonX","GCInputButtonY","GCInputLeftShoulder","GCInputRightShoulder","GCInputLeftTrigger","GCInputRightTrigger","GCInputDirectionPad","GCInputButtonMenu","GCInputButtonOptions","GCInputLeftThumbstickButton","GCInputRightThumbstickButton"]:
     assert name in native, f"Native input absent: {name}"
+# Regressions: a connected Bluetooth/WebSocket controller must not be obscured
+# by a PIN dialog. Manual dismissal must be reversible when offline.
+assert "body.connected #overlay" in html, "Missing connected overlay auto-hide CSS"
+assert "body.pairing-hidden #overlay" in html, "Missing manual dismissal CSS"
+assert 'id="dismissPairing"' in html and 'id="showPairing"' in html
+assert "byId('dismissPairing').onclick" in html
+assert "byId('showPairing').onclick" in html
+assert "document.body.classList.remove('pairing-hidden')" in html
 js=re.search(r"<script>(.*?)</script>",html,re.S)
 assert js, "Missing inline JS"
 with tempfile.NamedTemporaryFile(mode="w", suffix=".js") as fp:

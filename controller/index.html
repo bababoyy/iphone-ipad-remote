@@ -52,6 +52,10 @@ body.connected .dot{background:var(--green);box-shadow:0 0 0 3px #8cdbb520}
 .system-btn{border:1px solid #50617b;background:#202e40;border-radius:16px;min-width:clamp(47px,7vw,68px);padding:8px 5px;font-size:9px;letter-spacing:.1em;font-weight:750;box-shadow:0 3px 0 #0c1018}
 #overlay,#settings{position:fixed;z-index:10;top:50%;left:50%;transform:translate(-50%,-50%);width:min(92vw,420px);max-height:92dvh;overflow:auto;padding:24px;border-radius:21px;border:1px solid #475772;background:linear-gradient(155deg,#1b2940,#101824);box-shadow:0 0 0 100vmax #02050caa,0 20px 90px #000b;touch-action:pan-y}
 #settings{display:none}
+#dismissPairing{position:absolute;top:8px;right:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:transparent;color:#d9e6f6;font-size:23px;line-height:1}
+#dismissPairing:focus-visible,#showPairing:focus-visible{outline:2px solid #8bbff4;outline-offset:2px}
+#showPairing{display:none}
+body.pairing-hidden:not(.connected) #showPairing{display:inline-flex}
 #overlay h2,#settings h2{font-size:19px;margin:0 0 8px;letter-spacing:-.02em}
 #overlay p,#settings p{font-size:12px;line-height:1.5;color:#a7b9cf;margin:5px 0 14px}
 .form-row{display:flex;gap:9px;align-items:stretch}
@@ -66,7 +70,7 @@ select{border-radius:9px;background:#101a2a;color:white;border:1px solid #405979
 .full{width:100%;padding:11px;border-radius:10px;background:#293b53;border:1px solid #45607e}
 #rotate-hint{display:none}
 body:not(.connected):not(.preview) #pad{opacity:.37;pointer-events:none}
-body.preview #overlay{display:none}
+body.connected #overlay,body.pairing-hidden #overlay,body.preview #overlay{display:none}
 @media(orientation:portrait){
  #rotate-hint{display:block;position:absolute;bottom:7px;left:0;right:0;text-align:center;color:#8da6c6;font-size:12px;pointer-events:none}
  #pad{min-height:0}#shoulders{left:4px;right:4px;height:43px}.shoulder-pair{gap:3px}
@@ -85,7 +89,7 @@ body.preview #overlay{display:none}
 </head>
 <body>
 <div id="app">
- <header id="topbar"><div class="brand">VC<span>REMOTE</span> <span style="color:#667b92">/ PAD</span></div><div class="status"><span class="dot"></span><span id="status">Disconnected</span></div><button class="head-btn" id="settingsButton" aria-label="Settings">⚙ &nbsp; Settings</button></header>
+ <header id="topbar"><div class="brand">VC<span>REMOTE</span> <span style="color:#667b92">/ PAD</span></div><div class="status"><span class="dot"></span><span id="status">Disconnected</span></div><button class="head-btn" id="showPairing" aria-label="Open pairing">Pair</button><button class="head-btn" id="settingsButton" aria-label="Settings">⚙ &nbsp; Settings</button></header>
  <div id="pad">
   <div id="shoulders">
    <div class="shoulder-pair"><button class="shoulder trigger" data-control="LT" aria-label="Left trigger">L2</button><button class="shoulder" data-control="LB" aria-label="Left bumper">L1</button></div>
@@ -107,6 +111,7 @@ body.preview #overlay{display:none}
  </div>
 </div>
 <section id="overlay" role="dialog" aria-label="Connect to iPad">
+ <button type="button" id="dismissPairing" aria-label="Close pairing dialog">×</button>
  <h2>Connect to iPad</h2><p>Enter the six-digit PIN shown in the game's VCRemote overlay.</p>
  <div class="form-row"><input id="pin" type="tel" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="6" placeholder="000000" aria-label="Six-digit PIN"><button class="primary" id="join">Connect</button></div>
  <p id="error" role="alert"></p><div class="small">Local network only · Use iPhone hotspot or the same Wi-Fi.</div>
@@ -160,16 +165,19 @@ body.preview #overlay{display:none}
  function connect(){
   var pin=byId('pin').value.trim();
   if(!/^\d{6}$/.test(pin)){byId('error').textContent='Enter exactly six digits.';return}
+  document.body.classList.remove('pairing-hidden');
   if(socket)socket.close();
   var s=new WebSocket('ws://'+location.host+'/ws?pin='+pin),current=++session;
   socket=s;
   byId('status').textContent='Connecting…';
   byId('error').textContent='';
-  s.onopen=function(){if(current!==session)return;document.body.classList.add('connected');setMode('gamepad')};
-  s.onclose=function(){if(current!==session)return;releaseAll();socket=null;document.body.classList.remove('connected');byId('status').textContent='Disconnected';byId('error').textContent='Connection closed. Check PIN or local network.'};
+  s.onopen=function(){if(current!==session)return;document.body.classList.remove('pairing-hidden');document.body.classList.add('connected');setMode('gamepad')};
+  s.onclose=function(){if(current!==session)return;releaseAll();socket=null;document.body.classList.remove('connected');document.body.classList.remove('pairing-hidden');byId('status').textContent='Disconnected';byId('error').textContent='Connection closed. Check PIN or local network.'};
   s.onerror=function(){if(current===session)byId('error').textContent='Unable to connect to iPad.'};
  }
  byId('join').onclick=connect;
+ byId('dismissPairing').onclick=function(){byId('pin').blur();document.body.classList.add('pairing-hidden')};
+ byId('showPairing').onclick=function(){document.body.classList.remove('pairing-hidden')};
  byId('pin').addEventListener('keydown',function(e){if(e.key==='Enter')connect()});
  function bindButton(el,name){
   el.addEventListener('pointerdown',function(e){

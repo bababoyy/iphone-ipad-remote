@@ -5,7 +5,8 @@ Date: 2026-10-28. User is traveling, will transfer work to Codex later. This is 
 ## User confirmed
 1. iPhone to iPad over hotspot, touch-injection: movement works.
 2. iPhone to iPad over hotspot, Apple GCVirtualController: **all universal controls work**.
-3. Bluetooth: **NOT TESTED**. First native iPhone IPA + iPad dylib currently build in GitHub Actions.
+3. Bluetooth: **WORKING ON REAL DEVICES** according to user: PIN authentication succeeds and controls *behind* the pairing overlay move the game. Exact latency and all individual buttons have not yet been independently measured.
+4. A UI defect was found: the PIN overlay remained in front even after BLE succeeded because connected-state CSS was missing. Fixed by adding connected auto-hide, manual × dismissal and a Pair reopening button. Re-validate with the next IPA build.
 
 ## Source of truth
 - Repo: bababoyy/iphone-ipad-remote, branch experiment/ble-link.

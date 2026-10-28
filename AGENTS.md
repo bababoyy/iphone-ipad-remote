@@ -6,7 +6,7 @@ Keep the project generic; no game-specific phone buttons are necessary.
 ## Known good
 - main: experimental original touch-over-Wi-Fi version, user verified movement.
 - experiment/virtual-gamepad: Wi-Fi + Apple GCVirtualController, user verified **every button works**.
-- experiment/ble-link: GCVirtualController over BLE transport; both binaries compile on GitHub Actions, **no real BLE pairing test yet**.
+- experiment/ble-link: GCVirtualController over BLE transport; both binaries compile in GitHub Actions, and user confirmed successful real-device Bluetooth pairing with game control. PIN overlay auto-hide/close fix still needs next on-device test.
 
 ## Working rules
 1. Do not rewrite or disturb the proven Wi-Fi controller. Develop BLE on experiment/ble-link until real-device tests pass.
