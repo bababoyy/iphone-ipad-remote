@@ -1,33 +1,229 @@
-<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><title>VCRemote</title><style>
-*{box-sizing:border-box}body{margin:0;background:#111729;color:white;font-family:-apple-system,system-ui;overflow:hidden;touch-action:none}button,input,textarea{font:inherit}header{height:48px;padding:5px 12px;background:#25314c;display:flex;align-items:center;justify-content:space-between;gap:8px}header strong{color:#f5a4d2}#status{font-size:12px;color:#fcd34d}#inputMode{background:#1b2740;color:white;border:1px solid #677b9c;border-radius:7px;font-size:12px;padding:5px;max-width:135px}button{background:#34476c;color:white;border:1px solid #677b9c;border-radius:9px;padding:8px}main{height:calc(100dvh - 48px);display:flex;align-items:center;justify-content:space-evenly;gap:3px;padding:5px;user-select:none;-webkit-user-select:none}.zone{flex:1;display:flex;align-items:center;justify-content:center;min-width:60px}.stick{width:min(37vh,160px);height:min(37vh,160px);border:2px solid #75849f;background:#29354b;border-radius:50%;position:relative;touch-action:none}.stick:after{content:"";position:absolute;inset:30%;background:#8ba6cf;border-radius:50%;transform:translate(var(--dx,0px),var(--dy,0px));pointer-events:none}#actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;min-width:115px;max-width:180px;flex:1}.action{border-radius:50%;aspect-ratio:1;font-size:12px;font-weight:bold}.action.down{background:#a74285}#overlay,#settings{position:fixed;z-index:4;top:50%;left:50%;transform:translate(-50%,-50%);width:min(92vw,440px);padding:16px;background:#1e2941;border:1px solid #677b9c;border-radius:14px;box-shadow:0 0 90px #000b}#overlay input,#settings textarea{width:100%;background:#101729;border:1px solid #687da0;border-radius:6px;color:#fff;padding:9px}#settings{display:none}#settings textarea{height:35vh;touch-action:pan-y}#error{font-size:12px;color:#fca5a5}body.connected #overlay{display:none}body:not(.connected) main{opacity:.25;pointer-events:none}@media(orientation:portrait){.stick{width:25vw;height:25vw}#actions{grid-template-columns:1fr;max-width:68px}.action{font-size:10px}}
-</style></head><body><header><strong>VICE CITY · REMOTE</strong><span id="status">Bağlı değil</span><select id="inputMode" aria-label="Girdi modu"><option value="touch">Touch</option><option value="gamepad">Virtual Gamepad</option></select><button id="settingsButton">⚙ Ayarlar</button></header><main><div class="zone"><div class="stick" id="move"></div></div><div id="actions"><button class="action" data-action="fire">FIRE</button><button class="action" data-action="action">ACTION</button><button class="action" data-action="sprint">SPRINT</button><button class="action" data-action="brake">BRAKE</button></div><div class="zone"><div class="stick" id="look"></div></div></main><section id="overlay"><h3>iPad'e bağlan</h3><p>GTA Vice City ekranındaki PIN'i gir.</p><input id="pin" type="tel" maxlength="6" placeholder="6 haneli PIN"><button id="join">Bağlan</button><p id="error"></p></section><section id="settings"><h3>Dokunmatik koordinatlar</h3><p>Her alan 0 ile 1 arasında x/y oranıdır. Analoglar için r yarıçapıdır.</p><textarea id="json" spellcheck="false"></textarea><button id="save">Kaydet</button><button id="reset">Sıfırla</button><button id="close">Kapat</button><p id="jsonError"></p></section><script>
-(function(){'use strict';
-var original={move:{x:.16,y:.76,r:.08},look:{x:.65,y:.47,r:.09},fire:{x:.90,y:.66},action:{x:.81,y:.56},sprint:{x:.87,y:.82},brake:{x:.73,y:.82}};
-var layout;try{layout=JSON.parse(localStorage.getItem('vc-remote-layout'))||original}catch(e){layout=original}
-var ids={move:1,look:2,fire:3,action:4,sprint:5,brake:6},active={},ws=null,mode='touch';
-function el(id){return document.getElementById(id)}
-function clamp(v,min,max){return Math.max(min,Math.min(max,v))}
-function send(name,phase,x,y){if(!ws||ws.readyState!==1)return;
-if(mode==='gamepad'){
- var c=layout[name],analog=name==='move'||name==='look';
- var gx=analog?(phase==='e'?0:clamp((x-c.x)/(c.r||1),-1,1)):(phase==='e'?0:1);
- var gy=analog?(phase==='e'?0:clamp(-(y-c.y)/(c.r||1),-1,1)):0;
- ws.send('G,'+ids[name]+','+phase+','+gx.toFixed(4)+','+gy.toFixed(4));
-}else{
- ws.send('T,'+ids[name]+','+phase+','+clamp(x,0,1).toFixed(4)+','+clamp(y,0,1).toFixed(4));
-}}
-function release(){Object.keys(active).forEach(function(name){var a=active[name];send(name,'e',a.x,a.y);delete active[name]});document.querySelectorAll('.stick').forEach(function(e){e.style.setProperty('--dx','0px');e.style.setProperty('--dy','0px')});document.querySelectorAll('.action').forEach(function(e){e.classList.remove('down')})}
-function join(){var pin=el('pin').value.trim();if(!/^\d{6}$/.test(pin)){el('error').textContent='Altı rakam gir.';return}if(ws)ws.close();ws=new WebSocket('ws://'+location.host+'/ws?pin='+pin);el('status').textContent='Bağlanıyor';ws.onopen=function(){document.body.classList.add('connected');el('status').textContent='Touch bağlı';mode='touch';el('inputMode').value='touch';ws.send('M,t')};ws.onclose=function(){release();document.body.classList.remove('connected');el('status').textContent='Bağlantı kesildi';el('error').textContent='PIN veya bağlantıyı kontrol et.'}}
-el('join').onclick=join;
-el('inputMode').onchange=function(){
- release();mode=this.value;
- if(ws&&ws.readyState===1){ws.send('M,'+(mode==='gamepad'?'g':'t'));}
- el('status').textContent=mode==='gamepad'?'Virtual Gamepad (deney)':'Touch';
-};
-function stick(name){var element=el(name);element.addEventListener('pointerdown',function(e){if(active[name])return;e.preventDefault();element.setPointerCapture(e.pointerId);var c=layout[name];active[name]={pointer:e.pointerId,x:c.x,y:c.y};send(name,'b',c.x,c.y);move(e)});function move(e){var a=active[name];if(!a||a.pointer!==e.pointerId)return;e.preventDefault();var r=element.getBoundingClientRect(),rad=Math.min(r.width,r.height)/2;var dx=(e.clientX-r.left-r.width/2)/rad,dy=(e.clientY-r.top-r.height/2)/rad,len=Math.hypot(dx,dy);if(len>1){dx/=len;dy/=len}element.style.setProperty('--dx',dx*rad*.5+'px');element.style.setProperty('--dy',dy*rad*.5+'px');var c=layout[name];a.x=c.x+dx*c.r;a.y=c.y+dy*c.r;send(name,'m',a.x,a.y)}element.addEventListener('pointermove',move);function end(e){var a=active[name];if(!a||a.pointer!==e.pointerId)return;send(name,'e',a.x,a.y);delete active[name];element.style.setProperty('--dx','0px');element.style.setProperty('--dy','0px')}['pointerup','pointercancel','lostpointercapture'].forEach(function(t){element.addEventListener(t,end)})}
-stick('move');stick('look');
-document.querySelectorAll('.action').forEach(function(button){var name=button.dataset.action;button.addEventListener('pointerdown',function(e){if(active[name])return;button.setPointerCapture(e.pointerId);var c=layout[name];active[name]={pointer:e.pointerId,x:c.x,y:c.y};button.classList.add('down');send(name,'b',c.x,c.y)});function end(e){var a=active[name];if(!a||a.pointer!==e.pointerId)return;send(name,'e',a.x,a.y);delete active[name];button.classList.remove('down')}['pointerup','pointercancel','lostpointercapture'].forEach(function(t){button.addEventListener(t,end)})});
-function valid(c){return Object.keys(original).every(function(k){return c[k]&&Object.keys(original[k]).every(function(v){return typeof c[k][v]==='number'&&Number.isFinite(c[k][v])&&c[k][v]>=0&&c[k][v]<=1})})}
-el('settingsButton').onclick=function(){release();el('json').value=JSON.stringify(layout,null,2);el('settings').style.display='block'};el('save').onclick=function(){try{var c=JSON.parse(el('json').value);if(!valid(c))throw Error('0–1 arası koordinat gir.');layout=c;localStorage.setItem('vc-remote-layout',JSON.stringify(c));el('settings').style.display='none'}catch(e){el('jsonError').textContent=e.message}};el('reset').onclick=function(){layout=JSON.parse(JSON.stringify(original));el('json').value=JSON.stringify(layout,null,2);localStorage.removeItem('vc-remote-layout')};el('close').onclick=function(){el('settings').style.display='none'};document.addEventListener('visibilitychange',function(){if(document.hidden)release()});window.addEventListener('pagehide',release);window.addEventListener('blur',release);setInterval(function(){if(ws&&ws.readyState===1)ws.send('P')},2000);
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0b0e16">
+<title>VCRemote · Universal Gamepad</title>
+<style>
+:root{color-scheme:dark;--bg:#080b12;--panel:#121923;--edge:#2a3648;--fg:#e5eaf2;--muted:#8b9cb1;--blue:#82b9f2;--green:#8cdbb5;--red:#ec9c9c;--yellow:#f4d392;--stick:clamp(98px,29vh,147px);--face:clamp(111px,30vh,150px);--dpad:clamp(99px,27vh,137px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;width:100%;margin:0;overflow:hidden;background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",system-ui,sans-serif;touch-action:none;overscroll-behavior:none;-webkit-user-select:none;user-select:none}
+button,input,select{font:inherit}button{border:0;cursor:pointer;color:inherit;touch-action:none}
+#app{height:100dvh;width:100vw;display:flex;flex-direction:column;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);background:radial-gradient(ellipse 58% 80% at 50% 92%,#192335 0%,transparent 100%),var(--bg)}
+#topbar{height:39px;flex-shrink:0;display:flex;align-items:center;gap:12px;padding:0 14px;border-bottom:1px solid #222c3c}
+.brand{font-size:12px;font-weight:800;letter-spacing:.18em;color:#e7effa;white-space:nowrap}.brand span{color:var(--blue)}
+.status{flex:1;min-width:0;color:#9fadc0;font-size:11px;display:flex;align-items:center;gap:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dot{height:7px;width:7px;flex:none;border-radius:100%;background:#d99a7a;box-shadow:0 0 0 3px #d99a7a20}
+body.connected .dot{background:var(--green);box-shadow:0 0 0 3px #8cdbb520}
+.head-btn{background:transparent;border:1px solid #344158;border-radius:10px;padding:6px 11px;font-size:11px;color:#b7c6d9}
+#pad{position:relative;flex:1;min-height:0;min-width:0;isolation:isolate}
+#shoulders{position:absolute;top:6px;left:12px;right:12px;height:42px;display:flex;justify-content:space-between;z-index:1;pointer-events:none}
+.shoulder-pair{display:flex;gap:8px;pointer-events:auto}
+.shoulder{width:clamp(46px,10vw,83px);height:39px;border-radius:13px 13px 20px 20px;background:linear-gradient(180deg,#29364a,#182231);border:1px solid #51637c;box-shadow:0 3px 0 #080b12,inset 0 1px 0 #ffffff14;color:#bcd0e7;font-weight:750;font-size:13px}
+.shoulder.trigger{border-color:#3e5976;background:linear-gradient(180deg,#20304a,#152033)}
+.shoulder.pressed,.face-button.pressed,.dkey.pressed,.system-btn.pressed,.stick-click.pressed{background:#527eaa!important;color:#fff;transform:translateY(2px);box-shadow:0 0 0 3px #6e9fda28!important}
+#leftside,#rightside{position:absolute;top:54px;bottom:4px;width:43%;pointer-events:none}
+#leftside{left:1.5%}#rightside{right:1.5%}
+.stick-unit{position:absolute;top:15%;width:var(--stick);height:var(--stick);pointer-events:auto}
+#leftStickUnit{left:3%}#rightStickUnit{left:3%}
+.stick{width:100%;height:100%;border-radius:50%;position:relative;border:2px solid #40526d;background:radial-gradient(circle at 48% 42%,#1d2b3d,#0f1520 75%);box-shadow:inset 0 8px 18px #0008,0 8px 22px #0005;touch-action:none}
+.stick:before{content:"";position:absolute;inset:13%;border:1px dashed #566c894a;border-radius:50%}
+.stick-knob{position:absolute;width:48%;height:48%;left:26%;top:26%;border-radius:50%;background:linear-gradient(145deg,#536982,#27374d 75%);border:1px solid #8da3bd65;box-shadow:0 5px 12px #0009,inset 0 2px 5px #ffffff1b;transform:translate(var(--x,0px),var(--y,0px));pointer-events:none}
+.stick-knob:after{content:"";position:absolute;inset:31%;border:2px solid #b9cae02c;border-radius:50%}
+.cluster-label{position:absolute;top:calc(100% + 3px);width:100%;text-align:center;letter-spacing:.14em;font-size:9px;font-weight:750;color:#667b95;pointer-events:none}
+.stick-click{position:absolute;right:0;bottom:-20px;min-width:31px;height:25px;padding:0 6px;border:1px solid #3e5270;border-radius:13px;background:#192437;color:#9bb6d2;font-size:10px;font-weight:800;box-shadow:0 2px 0 #080b12}
+#dpad{position:absolute;right:1%;top:14%;width:var(--dpad);height:var(--dpad);pointer-events:auto}
+.dkey{position:absolute;background:#29374a;border:1px solid #65778e;box-shadow:0 3px 0 #0a101a,inset 0 1px #ffffff15;display:flex;align-items:center;justify-content:center;color:#b7cadb;font-size:17px;font-weight:800}
+.dkey.up{width:34%;height:39%;top:0;left:33%;border-radius:10px 10px 4px 4px}
+.dkey.down{width:34%;height:39%;bottom:0;left:33%;border-radius:4px 4px 10px 10px}
+.dkey.left{height:34%;width:39%;left:0;top:33%;border-radius:10px 4px 4px 10px}
+.dkey.right{height:34%;width:39%;right:0;top:33%;border-radius:4px 10px 10px 4px}
+.dpad-center{position:absolute;inset:34%;border-radius:6px;background:#152132;box-shadow:inset 0 0 0 1px #53637a;pointer-events:none}
+#face{position:absolute;right:0;top:10%;width:var(--face);height:var(--face);pointer-events:auto}
+.face-button{position:absolute;width:34%;height:34%;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:850;border:1px solid #ffffff25;box-shadow:0 4px 0 #060a12,0 6px 12px #0006,inset 0 1px #ffffff26}
+.face-button.y{top:0;left:33%;background:#4b4030;color:#ffd99b}
+.face-button.x{top:33%;left:0;background:#254638;color:#9aefc7}
+.face-button.b{top:33%;right:0;background:#523038;color:#ffafb3}
+.face-button.a{bottom:0;left:33%;background:#254760;color:#a9ddff}
+#center{position:absolute;left:42%;width:16%;top:57px;bottom:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:2}
+.mark{letter-spacing:.17em;font-size:clamp(8px,1.5vw,12px);color:#40536d;font-weight:900;white-space:nowrap}
+.system-row{display:flex;align-items:center;gap:9px}
+.system-btn{border:1px solid #50617b;background:#202e40;border-radius:16px;min-width:clamp(47px,7vw,68px);padding:8px 5px;font-size:9px;letter-spacing:.1em;font-weight:750;box-shadow:0 3px 0 #0c1018}
+#overlay,#settings{position:fixed;z-index:10;top:50%;left:50%;transform:translate(-50%,-50%);width:min(92vw,420px);max-height:92dvh;overflow:auto;padding:24px;border-radius:21px;border:1px solid #475772;background:linear-gradient(155deg,#1b2940,#101824);box-shadow:0 0 0 100vmax #02050caa,0 20px 90px #000b;touch-action:pan-y}
+#settings{display:none}
+#overlay h2,#settings h2{font-size:19px;margin:0 0 8px;letter-spacing:-.02em}
+#overlay p,#settings p{font-size:12px;line-height:1.5;color:#a7b9cf;margin:5px 0 14px}
+.form-row{display:flex;gap:9px;align-items:stretch}
+#pin{min-width:0;flex:1;border-radius:10px;border:1px solid #587394;padding:12px;font-size:20px;letter-spacing:.22em;color:#fff;background:#0b1423}
+.primary{padding:11px 15px;border-radius:10px;background:#7bade8;color:#07111d;font-weight:850}
+#error{color:#ffb2ba!important;min-height:12px}
+.small{font-size:11px;color:#96aaca}
+.setting{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:16px 0}
+.setting label{font-size:13px;color:#d6e0ef}
+select{border-radius:9px;background:#101a2a;color:white;border:1px solid #405979;padding:8px;font-size:12px}
+#sens{width:122px;accent-color:#8bbff4;touch-action:pan-x}
+.full{width:100%;padding:11px;border-radius:10px;background:#293b53;border:1px solid #45607e}
+#rotate-hint{display:none}
+body:not(.connected):not(.preview) #pad{opacity:.37;pointer-events:none}
+body.preview #overlay{display:none}
+@media(orientation:portrait){
+ #rotate-hint{display:block;position:absolute;bottom:7px;left:0;right:0;text-align:center;color:#8da6c6;font-size:12px;pointer-events:none}
+ #pad{min-height:0}#shoulders{left:4px;right:4px;height:43px}.shoulder-pair{gap:3px}
+ .shoulder{width:clamp(41px,11vw,60px)}
+ #leftside,#rightside{top:20%;bottom:20%;width:50%}
+ #leftside{left:0}#rightside{right:0}
+ :root{--stick:clamp(77px,25vw,120px);--face:clamp(102px,33vw,143px);--dpad:clamp(94px,30vw,135px)}
+ #leftStickUnit{left:5%;top:3%}#rightStickUnit{left:5%;top:3%}
+ #dpad{right:5%;top:47%}#face{right:2%;top:47%}
+ #center{left:30%;width:40%;top:37%;bottom:auto}
+ #topbar .brand{font-size:10px}
+}
+@media(max-height:330px) and (orientation:landscape){#topbar{height:33px}#leftside,#rightside{top:47px}#shoulders{height:34px}.shoulder{height:32px}.stick-unit{top:10%}#dpad,#face{top:6%}}
+@media(prefers-reduced-motion:no-preference){.face-button,.shoulder,.dkey,.system-btn,.stick-click{transition:background-color .08s,transform .05s}}
+</style>
+</head>
+<body>
+<div id="app">
+ <header id="topbar"><div class="brand">VC<span>REMOTE</span> <span style="color:#667b92">/ PAD</span></div><div class="status"><span class="dot"></span><span id="status">Disconnected</span></div><button class="head-btn" id="settingsButton" aria-label="Settings">⚙ &nbsp; Settings</button></header>
+ <div id="pad">
+  <div id="shoulders">
+   <div class="shoulder-pair"><button class="shoulder trigger" data-control="LT" aria-label="Left trigger">L2</button><button class="shoulder" data-control="LB" aria-label="Left bumper">L1</button></div>
+   <div class="shoulder-pair"><button class="shoulder" data-control="RB" aria-label="Right bumper">R1</button><button class="shoulder trigger" data-control="RT" aria-label="Right trigger">R2</button></div>
+  </div>
+  <div id="leftside">
+   <div class="stick-unit" id="leftStickUnit"><div class="stick" id="leftStick"><div class="stick-knob"></div></div><div class="cluster-label">LEFT STICK</div><button class="stick-click" data-control="L3">L3</button></div>
+   <div id="dpad" aria-label="Directional pad">
+    <button class="dkey up" data-control="UP" aria-label="D-pad up">▲</button><button class="dkey left" data-control="LEFT" aria-label="D-pad left">◀</button>
+    <div class="dpad-center"></div><button class="dkey right" data-control="RIGHT" aria-label="D-pad right">▶</button><button class="dkey down" data-control="DOWN" aria-label="D-pad down">▼</button>
+   </div>
+  </div>
+  <div id="center"><div class="mark">● &nbsp; UNIVERSAL &nbsp; ●</div><div class="system-row"><button class="system-btn" data-control="OPTIONS">SELECT</button><button class="system-btn" data-control="MENU">START</button></div></div>
+  <div id="rightside">
+   <div class="stick-unit" id="rightStickUnit"><div class="stick" id="rightStick"><div class="stick-knob"></div></div><div class="cluster-label">RIGHT STICK</div><button class="stick-click" data-control="R3">R3</button></div>
+   <div id="face"><button class="face-button y" data-control="Y">Y</button><button class="face-button x" data-control="X">X</button><button class="face-button b" data-control="B">B</button><button class="face-button a" data-control="A">A</button></div>
+  </div>
+  <div id="rotate-hint">↻ Rotate to landscape for the full-size controller</div>
+ </div>
+</div>
+<section id="overlay" role="dialog" aria-label="Connect to iPad">
+ <h2>Connect to iPad</h2><p>Enter the six-digit PIN shown in the game's VCRemote overlay.</p>
+ <div class="form-row"><input id="pin" type="tel" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="6" placeholder="000000" aria-label="Six-digit PIN"><button class="primary" id="join">Connect</button></div>
+ <p id="error" role="alert"></p><div class="small">Local network only · Use iPhone hotspot or the same Wi-Fi.</div>
+</section>
+<section id="settings" role="dialog" aria-label="Controller settings">
+ <h2>Controller settings</h2><p>Generic controller layout, independent of the game.</p>
+ <div class="setting"><label for="inputMode">Input mode</label><select id="inputMode"><option value="gamepad">Virtual Gamepad</option><option value="touch">Legacy touch fallback</option></select></div>
+ <div class="setting"><label for="sens">Stick sensitivity <span id="sensValue"></span></label><input id="sens" type="range" min="0.5" max="1.5" step=".1" value="1"></div>
+ <p class="small">Legacy touch fallback is limited to the previous 2 sticks + A/B/X/Y coordinate mapping. All other buttons use GameController mode. Settings are stored only on this phone.</p>
+ <button class="full" id="closeSettings">Done</button>
+</section>
+<script>
+(function(){
+ 'use strict';
+ var ids={LS:1,RS:2,A:3,B:4,X:5,Y:6,LB:7,RB:8,LT:9,RT:10,UP:11,DOWN:12,LEFT:13,RIGHT:14,MENU:15,OPTIONS:16,L3:17,R3:18};
+ var layout={LS:{x:.16,y:.76,r:.08},RS:{x:.65,y:.47,r:.09},A:{x:.90,y:.66},B:{x:.81,y:.56},X:{x:.87,y:.82},Y:{x:.73,y:.82}};
+ var touches={},socket=null,mode='gamepad',sensitivity=1,session=0;
+ var byId=function(id){return document.getElementById(id)};
+ var clamp=function(v,min,max){return Math.max(min,Math.min(max,v))};
+ function sendRaw(msg){if(socket&&socket.readyState===WebSocket.OPEN)socket.send(msg)}
+ function send(name,phase,x,y){
+  var id=ids[name];if(!id)return;
+  if(mode==='touch'){
+   var c=layout[name];if(!c)return;
+   var tx=c.x,ty=c.y;
+   if(name==='LS'||name==='RS'){tx+=x*c.r;ty-=y*c.r}
+   sendRaw('T,'+id+','+phase+','+clamp(tx,0,1).toFixed(4)+','+clamp(ty,0,1).toFixed(4));
+  }else{
+   sendRaw('G,'+id+','+phase+','+clamp(x,-1,1).toFixed(4)+','+clamp(y,-1,1).toFixed(4));
+  }
+ }
+ function resetVisuals(){
+  document.querySelectorAll('.pressed').forEach(function(el){el.classList.remove('pressed')});
+  document.querySelectorAll('.stick-knob').forEach(function(el){el.style.setProperty('--x','0px');el.style.setProperty('--y','0px')});
+ }
+ function releaseAll(){
+  Object.keys(touches).forEach(function(k){
+   var t=touches[k];
+   send(k,'e',0,0);
+   delete touches[k];
+  });
+  resetVisuals();
+ }
+ function setMode(newMode){
+  releaseAll();
+  mode=newMode;
+  sendRaw(mode==='gamepad'?'M,g':'M,t');
+  byId('inputMode').value=mode;
+  byId('status').textContent=mode==='gamepad'?'Connected · Gamepad':'Connected · Touch';
+ }
+ function connect(){
+  var pin=byId('pin').value.trim();
+  if(!/^\d{6}$/.test(pin)){byId('error').textContent='Enter exactly six digits.';return}
+  if(socket)socket.close();
+  var s=new WebSocket('ws://'+location.host+'/ws?pin='+pin),current=++session;
+  socket=s;
+  byId('status').textContent='Connecting…';
+  byId('error').textContent='';
+  s.onopen=function(){if(current!==session)return;document.body.classList.add('connected');setMode('gamepad')};
+  s.onclose=function(){if(current!==session)return;releaseAll();socket=null;document.body.classList.remove('connected');byId('status').textContent='Disconnected';byId('error').textContent='Connection closed. Check PIN or local network.'};
+  s.onerror=function(){if(current===session)byId('error').textContent='Unable to connect to iPad.'};
+ }
+ byId('join').onclick=connect;
+ byId('pin').addEventListener('keydown',function(e){if(e.key==='Enter')connect()});
+ function bindButton(el,name){
+  el.addEventListener('pointerdown',function(e){
+   if(touches[name])return;
+   e.preventDefault();el.setPointerCapture(e.pointerId);
+   touches[name]={pointer:e.pointerId};
+   el.classList.add('pressed');
+   send(name,'b',1,0);
+  });
+  function end(e){
+   if(!touches[name]||touches[name].pointer!==e.pointerId)return;
+   send(name,'e',0,0);delete touches[name];el.classList.remove('pressed');
+  }
+  ['pointerup','pointercancel','lostpointercapture'].forEach(function(type){el.addEventListener(type,end)});
+ }
+ document.querySelectorAll('[data-control]').forEach(function(el){bindButton(el,el.getAttribute('data-control'))});
+ function bindStick(el,name){
+  var knob=el.querySelector('.stick-knob');
+  function move(e){
+   if(!touches[name]||touches[name].pointer!==e.pointerId)return;
+   e.preventDefault();
+   var r=el.getBoundingClientRect(),radius=Math.min(r.width,r.height)/2;
+   var dx=(e.clientX-r.left-r.width/2)/radius,dy=(e.clientY-r.top-r.height/2)/radius;
+   var length=Math.hypot(dx,dy);
+   if(length>1){dx/=length;dy/=length}
+   knob.style.setProperty('--x',dx*radius*.48+'px');
+   knob.style.setProperty('--y',dy*radius*.48+'px');
+   send(name,'m',clamp(dx*sensitivity,-1,1),clamp(-dy*sensitivity,-1,1));
+  }
+  el.addEventListener('pointerdown',function(e){
+   if(touches[name])return;
+   e.preventDefault();el.setPointerCapture(e.pointerId);
+   touches[name]={pointer:e.pointerId};
+   send(name,'b',0,0);move(e);
+  });
+  el.addEventListener('pointermove',move);
+  function end(e){
+   if(!touches[name]||touches[name].pointer!==e.pointerId)return;
+   send(name,'e',0,0);delete touches[name];
+   knob.style.setProperty('--x','0px');knob.style.setProperty('--y','0px');
+  }
+  ['pointerup','pointercancel','lostpointercapture'].forEach(function(type){el.addEventListener(type,end)});
+ }
+ bindStick(byId('leftStick'),'LS');bindStick(byId('rightStick'),'RS');
+ byId('settingsButton').onclick=function(){releaseAll();byId('settings').style.display='block'};
+ byId('closeSettings').onclick=function(){byId('settings').style.display='none'};
+ byId('inputMode').onchange=function(){setMode(this.value)};
+ var value=Number(localStorage.getItem('vcr-stick-sensitivity')||'1');
+ if(Number.isFinite(value))sensitivity=clamp(value,.5,1.5);
+ byId('sens').value=String(sensitivity);byId('sensValue').textContent=sensitivity.toFixed(1)+'×';
+ byId('sens').oninput=function(){sensitivity=Number(this.value);byId('sensValue').textContent=sensitivity.toFixed(1)+'×';localStorage.setItem('vcr-stick-sensitivity',String(sensitivity))};
+ document.addEventListener('visibilitychange',function(){if(document.hidden)releaseAll()});
+ window.addEventListener('pagehide',releaseAll);window.addEventListener('blur',releaseAll);
+ setInterval(function(){sendRaw('P')},2000);
+ if(location.search.indexOf('preview=1')>=0){document.body.classList.add('preview');byId('status').textContent='Preview · no connection'}
 })();
 </script></body></html>
