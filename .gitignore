@@ -1,0 +1,6 @@
+.DS_Store
+*.dylib
+*.ipa
+*.app/
+__pycache__/
+receiver/ControllerPage.generated.h

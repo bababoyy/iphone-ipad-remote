@@ -1,0 +1,30 @@
+name: Build VCRemote dylib
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Embed controller page
+        run: python3 scripts/embed.py
+      - name: Compile iOS arm64
+        shell: bash
+        run: |
+          set -euo pipefail
+          SDK="$(xcrun --sdk iphoneos --show-sdk-path)"
+          xcrun --sdk iphoneos clang++ -arch arm64 -isysroot "$SDK" \
+            -miphoneos-version-min=15.0 -std=c++17 -fobjc-arc -fobjc-weak \
+            -O2 -dynamiclib -framework Foundation -framework UIKit \
+            -framework CoreFoundation -lcommonCrypto \
+            receiver/VCRemote.mm receiver/TouchBridge.mm \
+            -Wl,-install_name,@rpath/VCRemote.dylib -o VCRemote.dylib
+          codesign --force --sign - VCRemote.dylib
+          file VCRemote.dylib
+      - uses: actions/upload-artifact@v4
+        with:
+          name: VCRemote-arm64
+          path: VCRemote.dylib
+          if-no-files-found: error
