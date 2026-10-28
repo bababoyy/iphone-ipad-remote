@@ -2,6 +2,7 @@
 #import <UIKit/UIKit.h>
 #import <CommonCrypto/CommonDigest.h>
 #import "TouchBridge.h"
+#import "VirtualGamepad.h"
 #import "ControllerPage.generated.h"
 #include <arpa/inet.h>
 #include <ifaddrs.h>
@@ -137,7 +138,23 @@ void wsReply(int fd,unsigned char opcode,const std::string &payload) {
 }
 void processMessage(const std::string &s) {
     if (s == "P") return; // keepalive
-    if (s.size() > 100 || s.compare(0,2,"T,") != 0) return;
+    if (s == "M,g") {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            VCReleaseAllTouches();
+            VCGamepadSetActive(YES);
+        });
+        return;
+    }
+    if (s == "M,t") {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            VCGamepadSetActive(NO);
+            VCReleaseAllTouches();
+        });
+        return;
+    }
+    if (s.size() > 100 || s.size() < 3 ||
+        (s.compare(0,2,"T,") != 0 && s.compare(0,2,"G,") != 0)) return;
+    bool gamepadEvent = (s[0] == 'G');
     int id = 0, consumed = 0;
     char phase = 0;
     double x = 0, y = 0;
@@ -146,8 +163,12 @@ void processMessage(const std::string &s) {
     if (parsed != 4 || (size_t)consumed != s.size() ||
         id < 1 || id > 12 || (phase != 'b' && phase != 'm' && phase != 'e') ||
         !std::isfinite(x) || !std::isfinite(y) ||
-        x < 0 || x > 1 || y < 0 || y > 1) return;
-    dispatch_async(dispatch_get_main_queue(), ^{VCInjectTouch(id,phase,x,y);});
+        x < (gamepadEvent ? -1 : 0) || x > 1 ||
+        y < (gamepadEvent ? -1 : 0) || y > 1) return;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (gamepadEvent) VCGamepadInject(id,phase,x,y);
+        else VCInjectTouch(id,phase,x,y);
+    });
 }
 
 void client(int fd) {
@@ -211,7 +232,10 @@ void client(int fd) {
         }
         shutdown(fd,SHUT_RDWR);close(fd);
         controllerConnected = false;
-        dispatch_async(dispatch_get_main_queue(), ^{VCReleaseAllTouches();});
+        dispatch_async(dispatch_get_main_queue(), ^{
+            VCGamepadSetActive(NO);
+            VCReleaseAllTouches();
+        });
     }
 }
 void server() {
