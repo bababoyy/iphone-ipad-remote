@@ -162,21 +162,21 @@ final class ControllerViewController: UIViewController {
         pairingOverlay.addSubview(panel)
         let heading=UILabel()
         heading.text="Connect to iPad"
-        heading.textColor=.white
-        heading.font=.systemFont(ofSize:20,weight:.bold)
+        heading.textColor = .white
+        heading.font = .systemFont(ofSize:20,weight:.bold)
         heading.translatesAutoresizingMaskIntoConstraints=false
         panel.addSubview(heading)
         let close=UIButton(type:.system)
         close.setTitle("×",for:.normal)
         close.setTitleColor(UIColor(red:0.83,green:0.90,blue:1,alpha:1),for:.normal)
-        close.titleLabel?.font=.systemFont(ofSize:27,weight:.regular)
+        close.titleLabel?.font = .systemFont(ofSize:27,weight:.regular)
         close.addTarget(self,action:#selector(closePairing),for:.touchUpInside)
         close.translatesAutoresizingMaskIntoConstraints=false
         panel.addSubview(close)
         let subtitle=UILabel()
         subtitle.text="Enter the 6-digit PIN shown on iPad."
         subtitle.textColor=UIColor(red:0.67,green:0.77,blue:0.88,alpha:1)
-        subtitle.font=.systemFont(ofSize:13)
+        subtitle.font = .systemFont(ofSize:13)
         subtitle.translatesAutoresizingMaskIntoConstraints=false
         panel.addSubview(subtitle)
         pinField.placeholder="000000"
@@ -184,7 +184,7 @@ final class ControllerViewController: UIViewController {
         pinField.textContentType = .oneTimeCode
         pinField.textAlignment = .center
         pinField.textColor = .white
-        pinField.font=.monospacedDigitSystemFont(ofSize:21,weight:.semibold)
+        pinField.font = .monospacedDigitSystemFont(ofSize:21,weight:.semibold)
         pinField.backgroundColor=UIColor(red:0.06,green:0.09,blue:0.15,alpha:1)
         pinField.layer.cornerRadius=10
         pinField.layer.borderWidth=1
@@ -195,7 +195,7 @@ final class ControllerViewController: UIViewController {
         connect.setTitle("Connect",for:.normal)
         connect.setTitleColor(UIColor(red:0.05,green:0.09,blue:0.15,alpha:1),for:.normal)
         connect.backgroundColor=UIColor(red:0.51,green:0.73,blue:0.97,alpha:1)
-        connect.titleLabel?.font=.systemFont(ofSize:14,weight:.bold)
+        connect.titleLabel?.font = .systemFont(ofSize:14,weight:.bold)
         connect.layer.cornerRadius=10
         connect.addTarget(self,action:#selector(connectTapped),for:.touchUpInside)
         connect.translatesAutoresizingMaskIntoConstraints=false
@@ -204,7 +204,7 @@ final class ControllerViewController: UIViewController {
         pairingMessage.numberOfLines=2
         pairingMessage.textAlignment = .center
         pairingMessage.textColor=UIColor(red:0.68,green:0.77,blue:0.86,alpha:1)
-        pairingMessage.font=.systemFont(ofSize:11)
+        pairingMessage.font = .systemFont(ofSize:11)
         pairingMessage.translatesAutoresizingMaskIntoConstraints=false
         panel.addSubview(pairingMessage)
         NSLayoutConstraint.activate([

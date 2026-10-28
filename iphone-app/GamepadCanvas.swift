@@ -192,10 +192,10 @@ final class GamepadCanvas: UIView {
                 // Each direction button has an origin offset; retain its original key
                 // and allow deliberate diagonal slides into adjacent directions.
                 state.setButton(finger.id,down:true)
-                if abs(dx)>.8 {
+                if abs(dx)> 0.8 {
                     state.setButton(dx>0 ? 14 : 13,down:true)
                 }
-                if abs(dy)>.8 {
+                if abs(dy)> 0.8 {
                     state.setButton(dy>0 ? 12 : 11,down:true)
                 }
             }
