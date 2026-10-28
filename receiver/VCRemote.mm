@@ -3,6 +3,7 @@
 #import <CommonCrypto/CommonDigest.h>
 #import "TouchBridge.h"
 #import "VirtualGamepad.h"
+#import "BLEReceiver.h"
 #import "ControllerPage.generated.h"
 #include <arpa/inet.h>
 #include <ifaddrs.h>
@@ -275,7 +276,10 @@ static void startVCRemote(void) {
         char six[7] = {};
         snprintf(six,sizeof(six),"%06u",100000+arc4random_uniform(900000));
         memcpy(pin, six, sizeof(pin));
-        dispatch_async(dispatch_get_main_queue(), ^{overlay();});
+        dispatch_async(dispatch_get_main_queue(), ^{
+            overlay();
+            VCBLEStart(pin);
+        });
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY,0), ^{server();});
     }
 }

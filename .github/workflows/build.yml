@@ -1,7 +1,7 @@
 name: Build VCRemote dylib
 on:
   push:
-    branches: [main, experiment/virtual-gamepad]
+    branches: [main, experiment/virtual-gamepad, experiment/ble-link]
   workflow_dispatch:
 jobs:
   build:
@@ -20,8 +20,8 @@ jobs:
           xcrun --sdk iphoneos clang++ -arch arm64 -isysroot "$SDK" \
             -miphoneos-version-min=15.0 -std=c++17 -fobjc-arc -fobjc-weak \
             -O2 -dynamiclib -framework Foundation -framework UIKit \
-            -framework CoreFoundation -framework GameController \
-            receiver/VCRemote.mm receiver/TouchBridge.mm receiver/VirtualGamepad.mm \
+            -framework CoreFoundation -framework GameController -framework CoreBluetooth \
+            receiver/VCRemote.mm receiver/TouchBridge.mm receiver/VirtualGamepad.mm receiver/BLEReceiver.mm \
             -Wl,-install_name,@rpath/VCRemote.dylib -o VCRemote.dylib
           codesign --force --sign - VCRemote.dylib
           file VCRemote.dylib
