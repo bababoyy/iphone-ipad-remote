@@ -158,9 +158,9 @@ void processMessage(const std::string &s) {
     int id = 0, consumed = 0;
     char phase = 0;
     double x = 0, y = 0;
-    int parsed = sscanf(s.c_str(),"T,%d,%c,%lf,%lf%n",
+    int parsed = sscanf(s.c_str()+2,"%d,%c,%lf,%lf%n",
                         &id,&phase,&x,&y,&consumed);
-    if (parsed != 4 || (size_t)consumed != s.size() ||
+    if (parsed != 4 || (size_t)consumed != s.size()-2 ||
         id < 1 || id > 12 || (phase != 'b' && phase != 'm' && phase != 'e') ||
         !std::isfinite(x) || !std::isfinite(y) ||
         x < (gamepadEvent ? -1 : 0) || x > 1 ||
