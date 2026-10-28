@@ -8,6 +8,8 @@ jobs:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
+      - name: Check controller protocol and JS syntax
+        run: python3 scripts/check_controller.py
       - name: Embed controller page
         run: python3 scripts/embed.py
       - name: Compile iOS arm64
