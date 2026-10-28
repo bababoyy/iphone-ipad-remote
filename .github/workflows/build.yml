@@ -18,7 +18,7 @@ jobs:
           xcrun --sdk iphoneos clang++ -arch arm64 -isysroot "$SDK" \
             -miphoneos-version-min=15.0 -std=c++17 -fobjc-arc -fobjc-weak \
             -O2 -dynamiclib -framework Foundation -framework UIKit \
-            -framework CoreFoundation -lcommonCrypto \
+            -framework CoreFoundation \
             receiver/VCRemote.mm receiver/TouchBridge.mm \
             -Wl,-install_name,@rpath/VCRemote.dylib -o VCRemote.dylib
           codesign --force --sign - VCRemote.dylib
