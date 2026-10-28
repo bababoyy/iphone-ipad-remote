@@ -1,7 +1,7 @@
 name: Build VCRemote dylib
 on:
   push:
-    branches: [main, experiment/virtual-gamepad, experiment/ble-link]
+    branches: [main, experiment/virtual-gamepad, experiment/ble-link, experiment/native-uikit]
   workflow_dispatch:
 jobs:
   build:
@@ -33,20 +33,20 @@ jobs:
           path: VCRemote.dylib
           if-no-files-found: error
   iphone-ipa:
-    if: github.ref == 'refs/heads/experiment/ble-link'
+    if: github.ref == 'refs/heads/experiment/ble-link' || github.ref == 'refs/heads/experiment/native-uikit'
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
-      - name: Check controller JavaScript
+      - name: Check native controller source invariants
         run: |
-          python3 scripts/check_controller.py
-          node --check iphone-app/NativeBridge.js
+          python3 scripts/check_native_controller.py
+          python3 scripts/test_ble_contract.py
       - name: Build unsigned iPhone IPA
         run: bash scripts/build_ble_ipa.sh
       - name: Check unsigned IPA contents
         run: python3 scripts/inspect_ipa.py
       - uses: actions/upload-artifact@v4
         with:
-          name: VCRemoteBLE-unsigned
-          path: build/ipa/VCRemoteBLE-unsigned.ipa
+          name: VCRemoteNative-unsigned
+          path: build/ipa/VCRemoteNative-unsigned.ipa
           if-no-files-found: error

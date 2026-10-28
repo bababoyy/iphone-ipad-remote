@@ -21,3 +21,9 @@ Keep the project generic; no game-specific phone buttons are necessary.
 10. Do not merge experimental code into main without confirmation and on-device test evidence.
 
 Refer to docs/BLE-V1-DESIGN.md and docs/BLE-HANDOFF.md for architecture, current state and pending tests.
+
+## Native UIKit experiment
+- New experiment/native-uikit branch: replaces the iPhone WKWebView with custom UIKit GamepadCanvas and typed ControllerState, reuses iPad BLE receiver and 10-byte packet protocol.
+- This branch produces VCRemoteNative-unsigned.ipa with a different bundle ID, so keep the proven BLE WebView app installed for fallback.
+- Only iPhone files need updating for native work. Never modify the proven iPad BLE receiver without test evidence.
+- Native Bluetooth and gamepad are not yet verified on real devices. UI must be tested for layout/ergonomics and 18 simultaneous controls.
