@@ -32,8 +32,8 @@ void VCGamepadRelease(void) {
     NSCAssert(NSThread.isMainThread, @"GameController must use main thread");
     if (!virtualPad || !connected) return;
     if (@available(iOS 17.0, *)) {
-        [virtualPad setPosition:CGPointZero forDirectionPadElement:GCInputLeftThumbstick];
-        [virtualPad setPosition:CGPointZero forDirectionPadElement:GCInputRightThumbstick];
+        [virtualPad setPosition:CGPointMake(0, 0) forDirectionPadElement:GCInputLeftThumbstick];
+        [virtualPad setPosition:CGPointMake(0, 0) forDirectionPadElement:GCInputRightThumbstick];
         for (NSString *button in @[GCInputButtonA, GCInputButtonB,
                                    GCInputButtonX, GCInputButtonY,
                                    GCInputLeftTrigger, GCInputRightTrigger,
@@ -69,7 +69,7 @@ void VCGamepadSetActive(BOOL active) {
             GCInputLeftTrigger, GCInputRightTrigger,
             GCInputLeftShoulder, GCInputRightShoulder
         ]];
-        configuration.hidden = YES; // iPhone supplies the visible interface
+        if (@available(iOS 17.0, *)) configuration.hidden = YES; // iPhone supplies the visible interface
         virtualPad = [[GCVirtualController alloc] initWithConfiguration:configuration];
     }
     debugBadge(@"Connecting...");
@@ -103,7 +103,7 @@ void VCGamepadInject(NSInteger identifier, char phase, double x, double y) {
     if (@available(iOS 17.0, *)) {
         if (identifier == 1 || identifier == 2) {
             NSString *element = identifier == 1 ? GCInputLeftThumbstick : GCInputRightThumbstick;
-            CGPoint p = phase == 'e' ? CGPointZero :
+            CGPoint p = phase == 'e' ? CGPointMake(0, 0) :
                 CGPointMake(std::max(-1.0, std::min(1.0, x)),
                             std::max(-1.0, std::min(1.0, y)));
             [virtualPad setPosition:p forDirectionPadElement:element];
