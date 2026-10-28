@@ -30,3 +30,19 @@ jobs:
           name: VCRemote-arm64
           path: VCRemote.dylib
           if-no-files-found: error
+  iphone-ipa:
+    if: github.ref == 'refs/heads/experiment/ble-link'
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check controller JavaScript
+        run: |
+          python3 scripts/check_controller.py
+          node --check iphone-app/NativeBridge.js
+      - name: Build unsigned iPhone IPA
+        run: bash scripts/build_ble_ipa.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: VCRemoteBLE-unsigned
+          path: build/ipa/VCRemoteBLE-unsigned.ipa
+          if-no-files-found: error
