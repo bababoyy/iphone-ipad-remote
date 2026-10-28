@@ -12,8 +12,9 @@ assert "touchesBegan" in canvas and "touchesMoved" in canvas
 assert "touchesCancelled" in canvas and "isMultipleTouchEnabled = true" in canvas
 assert "canvas.releaseAll()" in app and "UIApplication.willResignActiveNotification" in app
 assert "onChange?(state)" in canvas and "updateController(_ controller: ControllerState)" in app
-for id in range(1,19):
+for id in (1,2,3,4,5,6,11,12,13,14,15,16,17,18):
     assert f"add({id}," in canvas, f"Missing control ID {id}"
+assert "let shoulders = [9,7,8,10]" in canvas, "Missing shoulder/trigger mapping"
 for id in ("leftX","leftY","rightX","rightY","mask"):
     assert id in state
 assert "pairingOverlay.isHidden=true" in app
