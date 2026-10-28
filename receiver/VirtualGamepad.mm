@@ -9,6 +9,7 @@
 static GCVirtualController *virtualPad = nil;
 static BOOL wanted = NO;
 static BOOL connected = NO;
+static BOOL dpadHeld[4] = {NO, NO, NO, NO}; // up, down, left, right
 
 static void debugBadge(NSString *message) {
     UIWindow *window = UIApplication.sharedApplication.keyWindow;
@@ -34,10 +35,14 @@ void VCGamepadRelease(void) {
     if (@available(iOS 17.0, *)) {
         [virtualPad setPosition:CGPointMake(0, 0) forDirectionPadElement:GCInputLeftThumbstick];
         [virtualPad setPosition:CGPointMake(0, 0) forDirectionPadElement:GCInputRightThumbstick];
+        [virtualPad setPosition:CGPointMake(0, 0) forDirectionPadElement:GCInputDirectionPad];
+        for (int i = 0; i < 4; ++i) dpadHeld[i] = NO;
         for (NSString *button in @[GCInputButtonA, GCInputButtonB,
                                    GCInputButtonX, GCInputButtonY,
                                    GCInputLeftTrigger, GCInputRightTrigger,
-                                   GCInputLeftShoulder, GCInputRightShoulder]) {
+                                   GCInputLeftShoulder, GCInputRightShoulder,
+                                   GCInputButtonMenu, GCInputButtonOptions,
+                                   GCInputLeftThumbstickButton, GCInputRightThumbstickButton]) {
             [virtualPad setValue:0.0 forButtonElement:button];
         }
     }
@@ -64,10 +69,12 @@ void VCGamepadSetActive(BOOL active) {
         GCVirtualControllerConfiguration *configuration =
             [[GCVirtualControllerConfiguration alloc] init];
         configuration.elements = [NSSet setWithArray:@[
-            GCInputLeftThumbstick, GCInputRightThumbstick,
+            GCInputLeftThumbstick, GCInputRightThumbstick, GCInputDirectionPad,
             GCInputButtonA, GCInputButtonB, GCInputButtonX, GCInputButtonY,
             GCInputLeftTrigger, GCInputRightTrigger,
-            GCInputLeftShoulder, GCInputRightShoulder
+            GCInputLeftShoulder, GCInputRightShoulder,
+            GCInputButtonMenu, GCInputButtonOptions,
+            GCInputLeftThumbstickButton, GCInputRightThumbstickButton
         ]];
         if (@available(iOS 17.0, *)) configuration.hidden = YES; // iPhone supplies the visible interface
         virtualPad = [[GCVirtualController alloc] initWithConfiguration:configuration];
@@ -107,14 +114,28 @@ void VCGamepadInject(NSInteger identifier, char phase, double x, double y) {
                 CGPointMake(std::max(-1.0, std::min(1.0, x)),
                             std::max(-1.0, std::min(1.0, y)));
             [virtualPad setPosition:p forDirectionPadElement:element];
+        } else if (identifier >= 11 && identifier <= 14) {
+            // Independent key holds permit e.g. UP + RIGHT simultaneously.
+            dpadHeld[identifier - 11] = phase != 'e';
+            CGPoint position = CGPointMake(
+                (dpadHeld[3] ? 1.0 : 0.0) - (dpadHeld[2] ? 1.0 : 0.0),
+                (dpadHeld[0] ? 1.0 : 0.0) - (dpadHeld[1] ? 1.0 : 0.0));
+            [virtualPad setPosition:position forDirectionPadElement:GCInputDirectionPad];
         } else {
-            // Trial mapping, not a confirmed Vice City MFi button layout.
             NSString *button = nil;
             switch (identifier) {
-                case 3: button = GCInputRightTrigger; break; // FIRE
-                case 4: button = GCInputButtonA; break;      // ACTION
-                case 5: button = GCInputButtonB; break;      // SPRINT
-                case 6: button = GCInputLeftTrigger; break;  // BRAKE
+                case 3: button = GCInputButtonA; break;
+                case 4: button = GCInputButtonB; break;
+                case 5: button = GCInputButtonX; break;
+                case 6: button = GCInputButtonY; break;
+                case 7: button = GCInputLeftShoulder; break;
+                case 8: button = GCInputRightShoulder; break;
+                case 9: button = GCInputLeftTrigger; break;
+                case 10: button = GCInputRightTrigger; break;
+                case 15: button = GCInputButtonMenu; break;
+                case 16: button = GCInputButtonOptions; break;
+                case 17: button = GCInputLeftThumbstickButton; break;
+                case 18: button = GCInputRightThumbstickButton; break;
             }
             if (button) [virtualPad setValue:(phase == 'e' ? 0.0 : 1.0)
                           forButtonElement:button];
