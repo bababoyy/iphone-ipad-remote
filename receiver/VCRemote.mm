@@ -22,7 +22,9 @@
 // HTTP and RFC6455 WebSocket server inside Vice City. Trusted LAN ONLY.
 namespace {
 constexpr int PORT = 8765;
-std::string pin;
+// Fixed-size, zero-initialized PIN storage. Unlike a global std::string,
+// this is safe to write from a dylib constructor before C++ dynamic init.
+char pin[7] = {};
 std::atomic<bool> controllerConnected{false};
 
 std::string localAddress() {
@@ -62,7 +64,7 @@ void overlay(int attempt = 0) {
     label.layer.masksToBounds = YES;
     label.userInteractionEnabled = NO;
     label.text = [NSString stringWithFormat:@" VCRemote http://%s:%d\n PIN: %s",
-        localAddress().c_str(), PORT, pin.c_str()];
+        localAddress().c_str(), PORT, pin];
     [window addSubview:label];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW,30*NSEC_PER_SEC),
         dispatch_get_main_queue(), ^{[label removeFromSuperview];});
@@ -170,6 +172,7 @@ void client(int fd) {
         }
         std::string prefix="/ws?pin=";
         if (path.compare(0,prefix.size(),prefix) != 0 ||
+            strlen(pin) != 6 ||
             path.substr(prefix.size()) != pin ||
             header(request,"Upgrade") != "websocket") {
             respond(fd,"403 Forbidden","text/plain","Wrong PIN or upgrade");
@@ -247,7 +250,7 @@ static void startVCRemote(void) {
     @autoreleasepool {
         char six[7] = {};
         snprintf(six,sizeof(six),"%06u",100000+arc4random_uniform(900000));
-        pin = six;
+        memcpy(pin, six, sizeof(pin));
         dispatch_async(dispatch_get_main_queue(), ^{overlay();});
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY,0), ^{server();});
     }
