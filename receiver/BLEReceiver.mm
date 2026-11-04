@@ -13,6 +13,12 @@ static NSString *const kServiceUUID = @"5CB83FF0-304B-4C67-87C9-0F2D12C31801";
 static NSString *const kAuthUUID = @"5CB83FF0-304B-4C67-87C9-0F2D12C31802";
 static NSString *const kStateUUID = @"5CB83FF0-304B-4C67-87C9-0F2D12C31803";
 static const NSTimeInterval kFrameTimeout = 0.40;
+// Short radio hiccups only neutralize controls. The virtual controller is
+// disconnected (which the game may notice) only after a long silence.
+static const NSTimeInterval kGamepadDisconnectTimeout = 10.0;
+// After this much silence, a different central may claim the controller slot
+// with the correct PIN (e.g. the same iPhone after a BLE address rotation).
+static const NSTimeInterval kSlotTakeoverTimeout = 3.0;
 
 @interface VCBLEReceiver : NSObject <CBPeripheralManagerDelegate>
 @property(nonatomic,strong) CBPeripheralManager *manager;
@@ -23,6 +29,7 @@ static const NSTimeInterval kFrameTimeout = 0.40;
 @property(nonatomic,strong) dispatch_source_t watchdog;
 @property(nonatomic,assign) NSTimeInterval lastFrameAt;
 @property(nonatomic,assign) BOOL liveInput;
+@property(nonatomic,assign) BOOL gamepadRequested;
 @property(nonatomic,assign) BOOL hasSequence;
 @property(nonatomic,assign) uint8_t lastSequence;
 @property(nonatomic,assign) NSInteger badPINAttempts;
@@ -41,12 +48,19 @@ static const NSTimeInterval kFrameTimeout = 0.40;
             100 * NSEC_PER_MSEC, 25 * NSEC_PER_MSEC);
         dispatch_source_set_event_handler(_watchdog, ^{
             VCBLEReceiver *strongSelf = weakSelf;
-            if (!strongSelf || !strongSelf.liveInput) return;
-            if (NSProcessInfo.processInfo.systemUptime - strongSelf.lastFrameAt > kFrameTimeout) {
+            if (!strongSelf) return;
+            NSTimeInterval silence = NSProcessInfo.processInfo.systemUptime - strongSelf.lastFrameAt;
+            if (strongSelf.liveInput && silence > kFrameTimeout) {
+                // Neutralize only; keep the virtual controller connected so a
+                // brief BLE stall does not look like a controller unplug.
                 strongSelf.liveInput = NO;
                 VCGamepadRelease();
-                VCGamepadSetActive(NO);
                 NSLog(@"[VCRemote/BLE] Controller timeout: all controls released");
+            }
+            if (strongSelf.gamepadRequested && silence > kGamepadDisconnectTimeout) {
+                strongSelf.gamepadRequested = NO;
+                VCGamepadSetActive(NO);
+                NSLog(@"[VCRemote/BLE] Long silence: virtual controller disconnected");
             }
         });
         dispatch_resume(_watchdog);
@@ -57,6 +71,7 @@ static const NSTimeInterval kFrameTimeout = 0.40;
     if (manager.state != CBManagerStatePoweredOn) {
         self.authorized = nil;
         self.liveInput = NO;
+        self.gamepadRequested = NO;
         VCGamepadSetActive(NO);
         NSLog(@"[VCRemote/BLE] Bluetooth unavailable: %ld",(long)manager.state);
         return;
@@ -99,10 +114,17 @@ static const NSTimeInterval kFrameTimeout = 0.40;
                 memcmp(bytes + 1,self.pin.UTF8String,6) == 0;
             NSTimeInterval now = NSProcessInfo.processInfo.systemUptime;
             BOOL allowed = now >= self.cooldownUntil;
-            BOOL freeSlot = !self.authorized ||
+            // The slot is also free once the authorized central has gone quiet.
+            // CoreBluetooth gives a peripheral no disconnect callback, and the
+            // iPhone may come back under a new identifier after reconnecting.
+            BOOL staleSlot = now - self.lastFrameAt > kSlotTakeoverTimeout;
+            BOOL freeSlot = !self.authorized || staleSlot ||
                 [self.authorized isEqual:request.central.identifier];
             if (validPin && allowed && freeSlot) {
+                if (self.authorized && ![self.authorized isEqual:request.central.identifier])
+                    NSLog(@"[VCRemote/BLE] Silent controller replaced by new central");
                 self.authorized = request.central.identifier;
+                self.lastFrameAt = now;
                 self.hasSequence = NO;
                 self.badPINAttempts = 0;
                 self.liveInput = NO;
@@ -135,7 +157,8 @@ static const NSTimeInterval kFrameTimeout = 0.40;
         self.lastFrameAt = NSProcessInfo.processInfo.systemUptime;
         if (!self.liveInput) {
             self.liveInput = YES;
-            VCGamepadSetActive(YES);
+            self.gamepadRequested = YES;
+            VCGamepadSetActive(YES); // no-op while already connected/connecting
         }
         // Snapshot semantics: each new frame overwrites ALL controls, fixing lost
         // release events without retaining an obsolete queue of joystick deltas.

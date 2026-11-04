@@ -36,3 +36,12 @@ assert accepted(16,15)
 assert not accepted(15,15)
 assert not accepted(254,1)
 print("BLE source contract and reference vectors PASS")
+
+# Reliability regressions (watchdog must neutralize, not unplug, on short stalls;
+# a silent controller slot must be reclaimable without relaunching the game).
+assert "kGamepadDisconnectTimeout = 10.0" in ipad
+assert "kSlotTakeoverTimeout" in ipad and "staleSlot" in ipad
+watchdog=ipad[ipad.index("dispatch_source_set_event_handler"):ipad.index("dispatch_resume")]
+short=watchdog[:watchdog.index("kGamepadDisconnectTimeout")]
+assert "VCGamepadRelease()" in short and "VCGamepadSetActive(NO)" not in short
+print("BLE reliability checks PASS")

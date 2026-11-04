@@ -30,3 +30,9 @@ with tempfile.NamedTemporaryFile(mode="w", suffix=".js") as fp:
     fp.flush()
     subprocess.run(["node", "--check", fp.name], check=True)
 print("Controller UI protocol/static tests PASS")
+
+# Wi-Fi server reliability/security regressions.
+assert "UIApplicationWillEnterForegroundNotification" in server
+assert "listenerGeneration" in server and "poll(&p,1,1000)" in server
+assert "429 Too Many Requests" in server and "kMaxBadPins" in server
+print("Wi-Fi server reliability checks PASS")

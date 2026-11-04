@@ -12,6 +12,8 @@
 #include <sys/time.h>
 #include <unistd.h>
 #include <errno.h>
+#include <poll.h>
+#include <mutex>
 #include <atomic>
 #include <cmath>
 #include <cctype>
@@ -28,6 +30,31 @@ constexpr int PORT = 8765;
 // this is safe to write from a dylib constructor before C++ dynamic init.
 char pin[7] = {};
 std::atomic<bool> controllerConnected{false};
+// Bumped when the game returns to the foreground; the listener is rebuilt
+// because iOS may silently invalidate listening sockets while suspended.
+std::atomic<unsigned> listenerGeneration{0};
+
+// Wrong-PIN throttling. Global (not per IP) so an attacker on a shared
+// Wi-Fi network cannot brute-force the PIN by rotating addresses.
+constexpr int kMaxBadPins = 5;
+constexpr double kPinLockoutSeconds = 30;
+std::mutex pinGuardLock;
+int badPinAttempts = 0;
+double pinLockedUntil = 0;
+double uptime() { return NSProcessInfo.processInfo.systemUptime; }
+bool pinLockedOut() {
+    std::lock_guard<std::mutex> guard(pinGuardLock);
+    return uptime() < pinLockedUntil;
+}
+void recordPinResult(bool ok) {
+    std::lock_guard<std::mutex> guard(pinGuardLock);
+    if (ok) { badPinAttempts = 0; return; }
+    if (++badPinAttempts >= kMaxBadPins) {
+        badPinAttempts = 0;
+        pinLockedUntil = uptime() + kPinLockoutSeconds;
+        NSLog(@"[VCRemote] Too many wrong PINs; locked for %.0f s",kPinLockoutSeconds);
+    }
+}
 
 std::string localAddress() {
     struct ifaddrs *list = nullptr;
@@ -54,6 +81,7 @@ void overlay(int attempt = 0) {
                 dispatch_get_main_queue(), ^{overlay(attempt+1);});
         return;
     }
+    [[window viewWithTag:584276] removeFromSuperview]; // no duplicate badges
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15,16,350,49)];
     label.tag = 584276;
     label.numberOfLines = 2;
@@ -194,9 +222,17 @@ void client(int fd) {
         }
         std::string prefix="/ws?pin=";
         if (path.compare(0,prefix.size(),prefix) != 0 ||
-            strlen(pin) != 6 ||
-            path.substr(prefix.size()) != pin ||
             header(request,"Upgrade") != "websocket") {
+            respond(fd,"403 Forbidden","text/plain","Wrong PIN or upgrade");
+            close(fd);return;
+        }
+        if (pinLockedOut()) {
+            respond(fd,"429 Too Many Requests","text/plain","Too many wrong PINs, wait");
+            close(fd);return;
+        }
+        bool pinOk = strlen(pin) == 6 && path.substr(prefix.size()) == pin;
+        recordPinResult(pinOk);
+        if (!pinOk) {
             respond(fd,"403 Forbidden","text/plain","Wrong PIN or upgrade");
             close(fd);return;
         }
@@ -239,33 +275,54 @@ void client(int fd) {
         });
     }
 }
+int openListener() {
+    int fd = socket(AF_INET,SOCK_STREAM,0);
+    if (fd < 0) {NSLog(@"[VCRemote] socket failed (errno %d)",errno);return -1;}
+    int yes = 1;
+    setsockopt(fd,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof(yes));
+    struct sockaddr_in a = {};
+    a.sin_family = AF_INET;
+    a.sin_port = htons(PORT);
+    a.sin_addr.s_addr = htonl(INADDR_ANY);
+    if (bind(fd,(struct sockaddr *)&a,sizeof(a)) || listen(fd,5)) {
+        NSLog(@"[VCRemote] port %d unavailable (errno %d)",PORT,errno);
+        close(fd);return -1;
+    }
+    NSLog(@"[VCRemote] available: http://%s:%d",localAddress().c_str(),PORT);
+    return fd;
+}
+// Self-healing listener: it is rebuilt after accept/poll errors and whenever
+// the game returns to the foreground, instead of dying until relaunch.
 void server() {
-    @autoreleasepool {
-        int fd = socket(AF_INET,SOCK_STREAM,0);
-        if (fd < 0) {NSLog(@"[VCRemote] socket failed");return;}
-        int yes = 1;
-        setsockopt(fd,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof(yes));
-        struct sockaddr_in a = {};
-        a.sin_family = AF_INET;
-        a.sin_port = htons(PORT);
-        a.sin_addr.s_addr = htonl(INADDR_ANY);
-        if (bind(fd,(struct sockaddr *)&a,sizeof(a)) ||
-            listen(fd,5)) {
-            NSLog(@"[VCRemote] port %d unavailable (errno %d)",PORT,errno);
-            close(fd);return;
-        }
-        NSLog(@"[VCRemote] available: http://%s:%d",localAddress().c_str(),PORT);
-        for (;;) {
-            int accepted = accept(fd,nullptr,nullptr);
-            if (accepted < 0) {
-                if (errno == EINTR) continue;
-                break;
+    for (;;) {
+        @autoreleasepool {
+            int fd = openListener();
+            if (fd < 0) {sleep(2);continue;}
+            unsigned generation = listenerGeneration.load();
+            for (;;) {
+                if (generation != listenerGeneration.load()) break;
+                struct pollfd p = {fd,POLLIN,0};
+                int ready = poll(&p,1,1000);
+                if (ready < 0) {
+                    if (errno == EINTR) continue;
+                    break;
+                }
+                if (ready == 0) continue;
+                if (p.revents & (POLLERR | POLLHUP | POLLNVAL)) break;
+                int accepted = accept(fd,nullptr,nullptr);
+                if (accepted < 0) {
+                    if (errno == EINTR || errno == ECONNABORTED ||
+                        errno == EAGAIN || errno == EWOULDBLOCK) continue;
+                    break;
+                }
+                dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY,0), ^{
+                    client(accepted);
+                });
             }
-            dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY,0), ^{
-                client(accepted);
-            });
+            NSLog(@"[VCRemote] restarting listener (errno %d)",errno);
+            close(fd);
+            sleep(1);
         }
-        close(fd);
     }
 }
 } // namespace
@@ -279,6 +336,13 @@ static void startVCRemote(void) {
         dispatch_async(dispatch_get_main_queue(), ^{
             overlay();
             VCBLEStart(pin);
+            [NSNotificationCenter.defaultCenter
+                addObserverForName:UIApplicationWillEnterForegroundNotification
+                object:nil queue:NSOperationQueue.mainQueue
+                usingBlock:^(__unused NSNotification *note) {
+                    listenerGeneration.fetch_add(1);
+                    overlay(); // show the address and PIN again after resuming
+                }];
         });
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY,0), ^{server();});
     }
