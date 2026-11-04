@@ -12,9 +12,17 @@ assert "touchesBegan" in canvas and "touchesMoved" in canvas
 assert "touchesCancelled" in canvas and "isMultipleTouchEnabled = true" in canvas
 assert "canvas.releaseAll()" in app and "UIApplication.willResignActiveNotification" in app
 assert "onChange?(state)" in canvas and "updateController(_ controller: ControllerState)" in app
-for id in (1,2,3,4,5,6,11,12,13,14,15,16,17,18):
-    assert f"add({id}," in canvas, f"Missing control ID {id}"
-assert "let shoulders = [9,7,8,10]" in canvas, "Missing shoulder/trigger mapping"
+# Layout lives in iphone-app/layout.json (validated by gamepad_layout.load:
+# ids 1..18 exactly once, sticks 1-2, D-pad 11-14).
+import sys
+sys.path.insert(0,str(root/"scripts"))
+import gamepad_layout
+spec=gamepad_layout.load()
+titles={c["id"]:c["title"] for c in spec["controls"]}
+assert [titles[i] for i in (9,7,8,10)]==["L2","L1","R1","R2"], "Shoulder/trigger mapping changed"
+assert "GamepadLayoutSpec.shared" in canvas and "spec.controls" in canvas
+assert "embed_layout.py" in build and "LayoutData.generated.swift" in build
+assert "GamepadLayout.swift" in build
 for id in ("leftX","leftY","rightX","rightY","mask"):
     assert id in state
 assert "pairingOverlay.isHidden=true" in app

@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "notes": "Single source of truth for the native gamepad layout. Read by iphone-app (embedded at build time via scripts/embed_layout.py) and by scripts/render_layout_svg.py. Positions are fractions of the canvas; radii come from 'sizes' (points, derived from the canvas' short side). Array order is draw order and touch priority for equal radii.",
+  "chrome": { "headerHeight": 48, "headerGap": 4 },
+  "hitSlop": { "stick": 6, "button": 8, "directional": 11 },
+  "sizes": {
+    "stick":    { "landscape": { "short": 0.185, "max": 67, "maxWidth": 0.10 },
+                  "portrait":  { "short": 0.13,  "max": 67, "maxWidth": 0.10 } },
+    "face":     { "landscape": { "short": 0.067, "min": 16, "max": 25 },
+                  "portrait":  { "short": 0.067, "min": 16, "max": 25 } },
+    "dpad":     { "landscape": { "short": 0.062, "min": 16, "max": 23 },
+                  "portrait":  { "short": 0.062, "min": 16, "max": 23 } },
+    "shoulder": { "landscape": { "short": 0.082, "min": 19, "max": 31 },
+                  "portrait":  { "short": 0.082, "min": 19, "max": 31 } },
+    "system":   { "landscape": { "short": 0.083, "max": 31 },
+                  "portrait":  { "short": 0.083, "max": 31 } }
+  },
+  "groups": {
+    "leftStick":  { "landscape": [0.15, 0.44], "portrait": [0.23, 0.29] },
+    "rightStick": { "landscape": [0.69, 0.70], "portrait": [0.77, 0.29] },
+    "dpad":       { "landscape": [0.30, 0.75], "portrait": [0.23, 0.70] },
+    "face":       { "landscape": [0.86, 0.38], "portrait": [0.77, 0.70] }
+  },
+  "stick": {
+    "base": "#0e1725", "baseStroke": "#455b78",
+    "ring": "#142133", "ringStroke": "#2a3d55",
+    "knob": "#324760", "knobHeld": "#496a91", "knobStroke": "#7892b3",
+    "cap": "#354b65", "capStroke": "#597493",
+    "caption": "#8597b0"
+  },
+  "styles": {
+    "faceA":    { "shape": { "type": "circle" }, "fill": "#224762", "heldFill": "#537fa8", "fg": "#b2ddff", "stroke": "#63758e", "strokeWidth": 1.2, "labelScale": 0.77 },
+    "faceB":    { "shape": { "type": "circle" }, "fill": "#4e3138", "heldFill": "#537fa8", "fg": "#ffb8c0", "stroke": "#63758e", "strokeWidth": 1.2, "labelScale": 0.77 },
+    "faceX":    { "shape": { "type": "circle" }, "fill": "#25483c", "heldFill": "#537fa8", "fg": "#a3f2ce", "stroke": "#63758e", "strokeWidth": 1.2, "labelScale": 0.77 },
+    "faceY":    { "shape": { "type": "circle" }, "fill": "#50432e", "heldFill": "#537fa8", "fg": "#ffdc96", "stroke": "#63758e", "strokeWidth": 1.2, "labelScale": 0.77 },
+    "dpad":     { "shape": { "type": "rect", "halfWidth": 1, "halfHeight": 1, "corner": 0.23 }, "fill": "#26374b", "heldFill": "#4b799d", "fg": "#d9e4f3", "stroke": "#6a7f97", "strokeWidth": 1.2, "labelScale": 0.58 },
+    "shoulder": { "shape": { "type": "rect", "halfWidth": 1.39, "halfHeight": 0.56, "corner": 0.49 }, "fill": "#111a29", "heldFill": "#557ca7", "fg": "#d9e4f3", "stroke": "#526681", "strokeWidth": 1, "labelScale": 0.58 },
+    "system":   { "shape": { "type": "rect", "halfWidth": 1.35, "halfHeight": 0.60, "corner": 0.55 }, "fill": "#111a29", "heldFill": "#557ca7", "fg": "#d9e4f3", "stroke": "#526681", "strokeWidth": 1, "labelScale": 0.35 },
+    "thumb":    { "shape": { "type": "circle" }, "fill": "#111a29", "heldFill": "#557ca7", "fg": "#d9e4f3", "stroke": "#63758e", "strokeWidth": 1.2, "labelScale": 0.58 }
+  },
+  "controls": [
+    { "id": 1,  "title": "L",      "kind": "stick", "size": "stick", "group": "leftStick",  "caption": "LEFT STICK" },
+    { "id": 2,  "title": "R",      "kind": "stick", "size": "stick", "group": "rightStick", "caption": "RIGHT STICK" },
+    { "id": 6,  "title": "Y",      "kind": "button", "size": "face", "group": "face", "offset": [0, -1.83], "offsetUnit": "face", "style": "faceY" },
+    { "id": 5,  "title": "X",      "kind": "button", "size": "face", "group": "face", "offset": [-1.83, 0], "offsetUnit": "face", "style": "faceX" },
+    { "id": 4,  "title": "B",      "kind": "button", "size": "face", "group": "face", "offset": [1.83, 0],  "offsetUnit": "face", "style": "faceB" },
+    { "id": 3,  "title": "A",      "kind": "button", "size": "face", "group": "face", "offset": [0, 1.83],  "offsetUnit": "face", "style": "faceA" },
+    { "id": 11, "title": "▲", "kind": "directional", "size": "dpad", "group": "dpad", "offset": [0, -1.31], "offsetUnit": "dpad", "style": "dpad" },
+    { "id": 12, "title": "▼", "kind": "directional", "size": "dpad", "group": "dpad", "offset": [0, 1.31],  "offsetUnit": "dpad", "style": "dpad" },
+    { "id": 13, "title": "◀", "kind": "directional", "size": "dpad", "group": "dpad", "offset": [-1.31, 0], "offsetUnit": "dpad", "style": "dpad" },
+    { "id": 14, "title": "▶", "kind": "directional", "size": "dpad", "group": "dpad", "offset": [1.31, 0],  "offsetUnit": "dpad", "style": "dpad" },
+    { "id": 9,  "title": "L2",     "kind": "button", "size": "shoulder", "at": { "landscape": [0.075, 0.085], "portrait": [0.075, 0.085] }, "style": "shoulder" },
+    { "id": 7,  "title": "L1",     "kind": "button", "size": "shoulder", "at": { "landscape": [0.20, 0.085],  "portrait": [0.20, 0.085] },  "style": "shoulder" },
+    { "id": 8,  "title": "R1",     "kind": "button", "size": "shoulder", "at": { "landscape": [0.80, 0.085],  "portrait": [0.80, 0.085] },  "style": "shoulder" },
+    { "id": 10, "title": "R2",     "kind": "button", "size": "shoulder", "at": { "landscape": [0.925, 0.085], "portrait": [0.925, 0.085] }, "style": "shoulder" },
+    { "id": 16, "title": "SELECT", "kind": "button", "size": "system", "at": { "landscape": [0.43, 0.54], "portrait": [0.43, 0.51] }, "style": "system" },
+    { "id": 15, "title": "START",  "kind": "button", "size": "system", "at": { "landscape": [0.57, 0.54], "portrait": [0.57, 0.51] }, "style": "system" },
+    { "id": 17, "title": "L3",     "kind": "button", "size": "face", "radiusScale": 0.76, "group": "leftStick",  "offset": [0.90, 0.88], "offsetUnit": "stick", "style": "thumb" },
+    { "id": 18, "title": "R3",     "kind": "button", "size": "face", "radiusScale": 0.76, "group": "rightStick", "offset": [0.90, 0.88], "offsetUnit": "stick", "style": "thumb" }
+  ]
+}

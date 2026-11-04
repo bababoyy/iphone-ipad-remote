@@ -107,7 +107,7 @@ final class ControllerViewController: UIViewController {
             topBar.topAnchor.constraint(equalTo:view.safeAreaLayoutGuide.topAnchor),
             topBar.leadingAnchor.constraint(equalTo:view.safeAreaLayoutGuide.leadingAnchor),
             topBar.trailingAnchor.constraint(equalTo:view.safeAreaLayoutGuide.trailingAnchor),
-            topBar.heightAnchor.constraint(equalToConstant:48),
+            topBar.heightAnchor.constraint(equalToConstant:CGFloat(GamepadLayoutSpec.shared.chrome.headerHeight)),
             logo.leadingAnchor.constraint(equalTo:topBar.leadingAnchor,constant:12),
             logo.centerYAnchor.constraint(equalTo:topBar.centerYAnchor),
             statusDot.leadingAnchor.constraint(equalTo:logo.trailingAnchor,constant:14),
@@ -135,7 +135,8 @@ final class ControllerViewController: UIViewController {
         canvas.translatesAutoresizingMaskIntoConstraints=false
         view.addSubview(canvas)
         NSLayoutConstraint.activate([
-            canvas.topAnchor.constraint(equalTo:topBar.bottomAnchor,constant:4),
+            canvas.topAnchor.constraint(equalTo:topBar.bottomAnchor,
+                                          constant:CGFloat(GamepadLayoutSpec.shared.chrome.headerGap)),
             canvas.leadingAnchor.constraint(equalTo:view.safeAreaLayoutGuide.leadingAnchor),
             canvas.trailingAnchor.constraint(equalTo:view.safeAreaLayoutGuide.trailingAnchor),
             canvas.bottomAnchor.constraint(equalTo:view.safeAreaLayoutGuide.bottomAnchor)

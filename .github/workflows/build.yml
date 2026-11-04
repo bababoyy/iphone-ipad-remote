@@ -4,6 +4,22 @@ on:
     branches: [main, experiment/virtual-gamepad, experiment/ble-link, experiment/native-uikit]
   workflow_dispatch:
 jobs:
+  layout:
+    # Cheap Linux job: layout.json schema, golden coordinates and SVG checks.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate and embed layout.json
+        run: python3 scripts/embed_layout.py
+      - name: Golden layout coordinates
+        run: python3 tests/test_layout.py
+      - name: Layout preview check (no new clipping/overlap)
+        run: python3 scripts/render_layout_svg.py --check --hit --out-dir build/layout-preview
+      - uses: actions/upload-artifact@v4
+        with:
+          name: layout-preview
+          path: build/layout-preview
+          if-no-files-found: error
   build:
     runs-on: macos-15
     steps:
@@ -33,7 +49,7 @@ jobs:
           path: VCRemote.dylib
           if-no-files-found: error
   iphone-ipa:
-    if: github.ref == 'refs/heads/experiment/ble-link' || github.ref == 'refs/heads/experiment/native-uikit'
+    if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/experiment/ble-link' || github.ref == 'refs/heads/experiment/native-uikit'
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4

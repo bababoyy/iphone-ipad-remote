@@ -1,0 +1,92 @@
+# Known layout issues; CI fails on anything new.
+# Regenerate: python3 scripts/render_layout_svg.py --update-baseline
+iphone-17-pro landscape: HIT-ZONE B / A
+iphone-17-pro landscape: HIT-ZONE X / A
+iphone-17-pro landscape: HIT-ZONE Y / B
+iphone-17-pro landscape: HIT-ZONE Y / X
+iphone-17-pro landscape: OVERLAP L / L3
+iphone-17-pro landscape: OVERLAP R / R3
+iphone-17-pro landscape: UNTOUCHABLE L1
+iphone-17-pro landscape: UNTOUCHABLE L2
+iphone-17-pro landscape: UNTOUCHABLE R1
+iphone-17-pro landscape: UNTOUCHABLE R2
+iphone-17-pro landscape: UNTOUCHABLE SELECT
+iphone-17-pro landscape: UNTOUCHABLE START
+iphone-17-pro portrait: CLIPPED L2
+iphone-17-pro portrait: CLIPPED R2
+iphone-17-pro portrait: HIT-ZONE B / A
+iphone-17-pro portrait: HIT-ZONE X / A
+iphone-17-pro portrait: HIT-ZONE Y / B
+iphone-17-pro portrait: HIT-ZONE Y / X
+iphone-17-pro portrait: OVERLAP L / L3
+iphone-17-pro portrait: OVERLAP L2 / L1
+iphone-17-pro portrait: OVERLAP R / R3
+iphone-17-pro portrait: OVERLAP R1 / R2
+iphone-17-pro portrait: OVERLAP SELECT / START
+iphone-17-pro portrait: UNTOUCHABLE L1
+iphone-17-pro portrait: UNTOUCHABLE L2
+iphone-17-pro portrait: UNTOUCHABLE R1
+iphone-17-pro portrait: UNTOUCHABLE R2
+iphone-17-pro portrait: UNTOUCHABLE SELECT
+iphone-17-pro portrait: UNTOUCHABLE START
+iphone-17-pro-max landscape: HIT-ZONE B / A
+iphone-17-pro-max landscape: HIT-ZONE X / A
+iphone-17-pro-max landscape: HIT-ZONE Y / B
+iphone-17-pro-max landscape: HIT-ZONE Y / X
+iphone-17-pro-max landscape: OVERLAP L / L3
+iphone-17-pro-max landscape: OVERLAP R / R3
+iphone-17-pro-max landscape: UNTOUCHABLE L1
+iphone-17-pro-max landscape: UNTOUCHABLE L2
+iphone-17-pro-max landscape: UNTOUCHABLE R1
+iphone-17-pro-max landscape: UNTOUCHABLE R2
+iphone-17-pro-max landscape: UNTOUCHABLE SELECT
+iphone-17-pro-max landscape: UNTOUCHABLE START
+iphone-17-pro-max portrait: CLIPPED L2
+iphone-17-pro-max portrait: CLIPPED R2
+iphone-17-pro-max portrait: HIT-ZONE B / A
+iphone-17-pro-max portrait: HIT-ZONE X / A
+iphone-17-pro-max portrait: HIT-ZONE Y / B
+iphone-17-pro-max portrait: HIT-ZONE Y / X
+iphone-17-pro-max portrait: OVERLAP L / L3
+iphone-17-pro-max portrait: OVERLAP L2 / L1
+iphone-17-pro-max portrait: OVERLAP R / R3
+iphone-17-pro-max portrait: OVERLAP R1 / R2
+iphone-17-pro-max portrait: OVERLAP SELECT / START
+iphone-17-pro-max portrait: UNTOUCHABLE L1
+iphone-17-pro-max portrait: UNTOUCHABLE L2
+iphone-17-pro-max portrait: UNTOUCHABLE R1
+iphone-17-pro-max portrait: UNTOUCHABLE R2
+iphone-17-pro-max portrait: UNTOUCHABLE SELECT
+iphone-17-pro-max portrait: UNTOUCHABLE START
+iphone-se landscape: HIT-ZONE B / A
+iphone-se landscape: HIT-ZONE R / START
+iphone-se landscape: HIT-ZONE X / A
+iphone-se landscape: HIT-ZONE Y / B
+iphone-se landscape: HIT-ZONE Y / X
+iphone-se landscape: HIT-ZONE ▲ / L3
+iphone-se landscape: HIT-ZONE ◀ / L3
+iphone-se landscape: OVERLAP L / L3
+iphone-se landscape: OVERLAP R / R3
+iphone-se landscape: UNTOUCHABLE L1
+iphone-se landscape: UNTOUCHABLE L2
+iphone-se landscape: UNTOUCHABLE R1
+iphone-se landscape: UNTOUCHABLE R2
+iphone-se landscape: UNTOUCHABLE SELECT
+iphone-se landscape: UNTOUCHABLE START
+iphone-se portrait: CLIPPED L2
+iphone-se portrait: CLIPPED R2
+iphone-se portrait: HIT-ZONE B / A
+iphone-se portrait: HIT-ZONE X / A
+iphone-se portrait: HIT-ZONE Y / B
+iphone-se portrait: HIT-ZONE Y / X
+iphone-se portrait: OVERLAP L / L3
+iphone-se portrait: OVERLAP L2 / L1
+iphone-se portrait: OVERLAP R / R3
+iphone-se portrait: OVERLAP R1 / R2
+iphone-se portrait: OVERLAP SELECT / START
+iphone-se portrait: UNTOUCHABLE L1
+iphone-se portrait: UNTOUCHABLE L2
+iphone-se portrait: UNTOUCHABLE R1
+iphone-se portrait: UNTOUCHABLE R2
+iphone-se portrait: UNTOUCHABLE SELECT
+iphone-se portrait: UNTOUCHABLE START

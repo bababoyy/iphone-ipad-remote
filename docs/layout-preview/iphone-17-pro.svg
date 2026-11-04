@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1416 1000" width="1416" height="1000">
 <rect width="1416" height="1000" fill="#e9edf2"/>
-<text x="40.00" y="46.00" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="18.00" font-weight="700" fill="#1b2533" text-anchor="start" dominant-baseline="central">iPhone 17 Pro — GamepadCanvas (experiment/native-uikit), 1 unit = 1 pt</text>
+<text x="40.00" y="46.00" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="18.00" font-weight="700" fill="#1b2533" text-anchor="start" dominant-baseline="central">iPhone 17 Pro — native gamepad (iphone-app/layout.json), 1 unit = 1 pt</text>
 <text x="40.00" y="68.00" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="12.00" font-weight="500" fill="#4a5568" text-anchor="start" dominant-baseline="central">Yellow dashed: safe area   Cyan dotted: canvas bounds</text>
 <g transform="translate(40,86)">
 <rect x="-10" y="-10" width="894" height="422" rx="72" fill="#2b2f36"/>
-<clipPath id="scr-landscape"><rect width="874" height="402" rx="62"/></clipPath>
-<g clip-path="url(#scr-landscape)">
-<defs><linearGradient id="bg-landscape" x1="0.3" y1="0" x2="0.7" y2="1"><stop offset="0" stop-color="#0c121c"/><stop offset="1" stop-color="#141d2c"/></linearGradient></defs>
-<rect width="874" height="402" fill="url(#bg-landscape)"/>
+<clipPath id="scr-iphone-17-pro-landscape"><rect width="874" height="402" rx="62"/></clipPath>
+<g clip-path="url(#scr-iphone-17-pro-landscape)">
+<defs><linearGradient id="bg-iphone-17-pro-landscape" x1="0.3" y1="0" x2="0.7" y2="1"><stop offset="0" stop-color="#0c121c"/><stop offset="1" stop-color="#141d2c"/></linearGradient></defs>
+<rect width="874" height="402" fill="url(#bg-iphone-17-pro-landscape)"/>
 <rect x="62" y="0" width="750" height="381" fill="none" stroke="#ffd166" stroke-width="0.8" stroke-dasharray="6 4" opacity="0.55"/>
 <text x="74.00" y="24.00" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="14.00" font-weight="700" fill="#b0d4fc" text-anchor="start" dominant-baseline="central">VCREMOTE / PAD</text>
 <circle cx="223.90" cy="24.00" r="4.00" fill="#e39175"/>
@@ -67,10 +67,10 @@
 </g></g>
 <g transform="translate(974,86)">
 <rect x="-10" y="-10" width="422" height="894" rx="72" fill="#2b2f36"/>
-<clipPath id="scr-portrait"><rect width="402" height="874" rx="62"/></clipPath>
-<g clip-path="url(#scr-portrait)">
-<defs><linearGradient id="bg-portrait" x1="0.3" y1="0" x2="0.7" y2="1"><stop offset="0" stop-color="#0c121c"/><stop offset="1" stop-color="#141d2c"/></linearGradient></defs>
-<rect width="402" height="874" fill="url(#bg-portrait)"/>
+<clipPath id="scr-iphone-17-pro-portrait"><rect width="402" height="874" rx="62"/></clipPath>
+<g clip-path="url(#scr-iphone-17-pro-portrait)">
+<defs><linearGradient id="bg-iphone-17-pro-portrait" x1="0.3" y1="0" x2="0.7" y2="1"><stop offset="0" stop-color="#0c121c"/><stop offset="1" stop-color="#141d2c"/></linearGradient></defs>
+<rect width="402" height="874" fill="url(#bg-iphone-17-pro-portrait)"/>
 <rect x="0" y="62" width="402" height="778" fill="none" stroke="#ffd166" stroke-width="0.8" stroke-dasharray="6 4" opacity="0.55"/>
 <text x="12.00" y="86.00" font-family="ui-monospace, 'SF Mono', Menlo, monospace" font-size="14.00" font-weight="700" fill="#b0d4fc" text-anchor="start" dominant-baseline="central">VCREMOTE / PAD</text>
 <circle cx="161.90" cy="86.00" r="4.00" fill="#e39175"/>

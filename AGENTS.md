@@ -27,3 +27,9 @@ Refer to docs/BLE-V1-DESIGN.md and docs/BLE-HANDOFF.md for architecture, current
 - This branch produces VCRemoteNative-unsigned.ipa with a different bundle ID, so keep the proven BLE WebView app installed for fallback.
 - Only iPhone files need updating for native work. Never modify the proven iPad BLE receiver without test evidence.
 - Native Bluetooth and gamepad are not yet verified on real devices. UI must be tested for layout/ergonomics and 18 simultaneous controls.
+
+## Native gamepad layout (Phase 0, see docs/ROADMAP.md)
+- `iphone-app/layout.json` is the single source of truth for control positions, sizes, colours and hit slop. Do not hard-code layout numbers in `GamepadCanvas.swift`.
+- Preview on a computer without Xcode: `python3 scripts/render_layout_svg.py --hit` (SVGs in `docs/layout-preview/`).
+- Before pushing a layout change: `python3 tests/test_layout.py` and `python3 scripts/render_layout_svg.py --check`. If the change is intended, refresh with `tests/test_layout.py --update` and `render_layout_svg.py --update-baseline`, and say so in the commit.
+- `scripts/gamepad_layout.py` and `iphone-app/GamepadLayout.swift` implement the same resolve rules; change both together.
