@@ -12,16 +12,20 @@ item says how it is verified:
 
 A green CI build never proves pairing, touch feel or game input (see `AGENTS.md`).
 
+CI note (2026-11-04): GitHub's arm64 `macos-15` runners were out of capacity
+(jobs cancelled after 15 min, "not acquired by Runner of type hosted"). Manual
+runs can pick `macos-15-intel` via the `macos_runner` input.
+
 ## Status at a glance
 
 | Track | State |
 |---|---|
-| Phase 0 – layout test environment | Done on this branch, pending CI (Swift compile) |
-| Reliability fixes 1–4 (BLE watchdog, BLE slot, Wi-Fi listener, Wi-Fi PIN limit) | Committed, pending CI + device |
+| Phase 0 – layout test environment | Done; CI green (run 41887832168), device check folded into Phase 1 |
+| Reliability fixes 1–4 (BLE watchdog, BLE slot, Wi-Fi listener, Wi-Fi PIN limit) | CI green, pending device |
 | Phase 1 – fix current layout | In progress: portrait layout done (PC) |
 | Phases 2–4 | Planned |
 
-## Phase 0 — layout test environment ✅ (pending CI)
+## Phase 0 — layout test environment ✅
 
 Goal: one source of truth for the gamepad layout that both the app and the
 computer preview read, so the SVG can never drift from the app.
@@ -41,8 +45,8 @@ computer preview read, so the SVG can never drift from the app.
 - CI: new `layout` job on Ubuntu; the native IPA job now also runs on manual
   (`workflow_dispatch`) builds of any branch.
 
-Exit criteria: `layout` job green ✅ locally; native IPA job compiles the new Swift
-files (**CI**, outstanding); app looks unchanged on a device (**Device**, can be
+Exit criteria: `layout` job green ✅; native IPA job compiles the new Swift
+files ✅ (**CI**, run 41887832168 on `macos-15-intel`, both artifacts present); app looks unchanged on a device (**Device**, can be
 folded into the Phase 1 device session).
 
 ## Phase 1 — fix the current layout (no new behaviour)
