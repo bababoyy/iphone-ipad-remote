@@ -18,7 +18,7 @@ A green CI build never proves pairing, touch feel or game input (see `AGENTS.md`
 |---|---|
 | Phase 0 – layout test environment | Done on this branch, pending CI (Swift compile) |
 | Reliability fixes 1–4 (BLE watchdog, BLE slot, Wi-Fi listener, Wi-Fi PIN limit) | Committed, pending CI + device |
-| Phase 1 – fix current layout | Next |
+| Phase 1 – fix current layout | In progress: portrait layout done (PC) |
 | Phases 2–4 | Planned |
 
 ## Phase 0 — layout test environment ✅ (pending CI)
@@ -49,11 +49,17 @@ folded into the Phase 1 device session).
 
 Known problems from the preview (`tests/layout_known_issues.txt`):
 
-- Portrait: L2/R2 clipped by 10–15 pt; L2/L1, R1/R2 and SELECT/START overlap;
-  L3/R3 overlap the sticks and their captions; bottom third unused; small sticks.
+- ✅ Portrait (layout.json only): sticks moved to the bottom (y 79 %) and
+  enlarged (r ≈ 56–66 pt, was 40); D-pad and ABXY above them (y 48 %);
+  SELECT/START apart at 38 %/62 %; shoulders inside the screen and spaced
+  (smaller pills in portrait). No CLIPPED/OVERLAP left on any device.
+- ✅ L3/R3 moved outside the stick ring (L3 outer-left, R3 outer-right) in both
+  orientations; this also removed the landscape L/L3 overlap without crowding
+  the D-pad. Their touch regions still border the stick's (by design, the
+  smaller control wins).
 - All devices: shoulder and SELECT/START pills are drawn 1–4 pt wider than their
-  circular touch region (ends do not respond); L3/R3 touch the stick ring;
-  face buttons' touch regions overlap by 1–3 pt.
+  circular touch region (ends do not respond); face buttons' touch regions
+  overlap by 1–3 pt.
 - Header: in portrait on iPhone SE "Not connected" is cut off by the Pair button.
 - Landscape: 48 pt header is ~12 % of the height; consider a slimmer or
   auto-hiding bar.

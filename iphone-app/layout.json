@@ -5,21 +5,21 @@
   "hitSlop": { "stick": 6, "button": 8, "directional": 11 },
   "sizes": {
     "stick":    { "landscape": { "short": 0.185, "max": 67, "maxWidth": 0.10 },
-                  "portrait":  { "short": 0.13,  "max": 67, "maxWidth": 0.10 } },
+                  "portrait":  { "short": 0.15,  "max": 67, "maxWidth": 0.15 } },
     "face":     { "landscape": { "short": 0.067, "min": 16, "max": 25 },
                   "portrait":  { "short": 0.067, "min": 16, "max": 25 } },
     "dpad":     { "landscape": { "short": 0.062, "min": 16, "max": 23 },
                   "portrait":  { "short": 0.062, "min": 16, "max": 23 } },
     "shoulder": { "landscape": { "short": 0.082, "min": 19, "max": 31 },
-                  "portrait":  { "short": 0.082, "min": 19, "max": 31 } },
+                  "portrait":  { "short": 0.064, "min": 19, "max": 26 } },
     "system":   { "landscape": { "short": 0.083, "max": 31 },
-                  "portrait":  { "short": 0.083, "max": 31 } }
+                  "portrait":  { "short": 0.07,  "max": 31 } }
   },
   "groups": {
-    "leftStick":  { "landscape": [0.15, 0.44], "portrait": [0.23, 0.29] },
-    "rightStick": { "landscape": [0.69, 0.70], "portrait": [0.77, 0.29] },
-    "dpad":       { "landscape": [0.30, 0.75], "portrait": [0.23, 0.70] },
-    "face":       { "landscape": [0.86, 0.38], "portrait": [0.77, 0.70] }
+    "leftStick":  { "landscape": [0.15, 0.44], "portrait": [0.27, 0.79] },
+    "rightStick": { "landscape": [0.69, 0.70], "portrait": [0.73, 0.79] },
+    "dpad":       { "landscape": [0.30, 0.75], "portrait": [0.27, 0.48] },
+    "face":       { "landscape": [0.86, 0.38], "portrait": [0.73, 0.48] }
   },
   "stick": {
     "base": "#0e1725", "baseStroke": "#455b78",
@@ -49,13 +49,13 @@
     { "id": 12, "title": "▼", "kind": "directional", "size": "dpad", "group": "dpad", "offset": [0, 1.31],  "offsetUnit": "dpad", "style": "dpad" },
     { "id": 13, "title": "◀", "kind": "directional", "size": "dpad", "group": "dpad", "offset": [-1.31, 0], "offsetUnit": "dpad", "style": "dpad" },
     { "id": 14, "title": "▶", "kind": "directional", "size": "dpad", "group": "dpad", "offset": [1.31, 0],  "offsetUnit": "dpad", "style": "dpad" },
-    { "id": 9,  "title": "L2",     "kind": "button", "size": "shoulder", "at": { "landscape": [0.075, 0.085], "portrait": [0.075, 0.085] }, "style": "shoulder" },
-    { "id": 7,  "title": "L1",     "kind": "button", "size": "shoulder", "at": { "landscape": [0.20, 0.085],  "portrait": [0.20, 0.085] },  "style": "shoulder" },
-    { "id": 8,  "title": "R1",     "kind": "button", "size": "shoulder", "at": { "landscape": [0.80, 0.085],  "portrait": [0.80, 0.085] },  "style": "shoulder" },
-    { "id": 10, "title": "R2",     "kind": "button", "size": "shoulder", "at": { "landscape": [0.925, 0.085], "portrait": [0.925, 0.085] }, "style": "shoulder" },
-    { "id": 16, "title": "SELECT", "kind": "button", "size": "system", "at": { "landscape": [0.43, 0.54], "portrait": [0.43, 0.51] }, "style": "system" },
-    { "id": 15, "title": "START",  "kind": "button", "size": "system", "at": { "landscape": [0.57, 0.54], "portrait": [0.57, 0.51] }, "style": "system" },
-    { "id": 17, "title": "L3",     "kind": "button", "size": "face", "radiusScale": 0.76, "group": "leftStick",  "offset": [0.90, 0.88], "offsetUnit": "stick", "style": "thumb" },
-    { "id": 18, "title": "R3",     "kind": "button", "size": "face", "radiusScale": 0.76, "group": "rightStick", "offset": [0.90, 0.88], "offsetUnit": "stick", "style": "thumb" }
+    { "id": 9,  "title": "L2",     "kind": "button", "size": "shoulder", "at": { "landscape": [0.075, 0.085], "portrait": [0.11, 0.07] }, "style": "shoulder" },
+    { "id": 7,  "title": "L1",     "kind": "button", "size": "shoulder", "at": { "landscape": [0.20, 0.085],  "portrait": [0.32, 0.07] },  "style": "shoulder" },
+    { "id": 8,  "title": "R1",     "kind": "button", "size": "shoulder", "at": { "landscape": [0.80, 0.085],  "portrait": [0.68, 0.07] },  "style": "shoulder" },
+    { "id": 10, "title": "R2",     "kind": "button", "size": "shoulder", "at": { "landscape": [0.925, 0.085], "portrait": [0.89, 0.07] }, "style": "shoulder" },
+    { "id": 16, "title": "SELECT", "kind": "button", "size": "system", "at": { "landscape": [0.43, 0.54], "portrait": [0.38, 0.25] }, "style": "system" },
+    { "id": 15, "title": "START",  "kind": "button", "size": "system", "at": { "landscape": [0.57, 0.54], "portrait": [0.62, 0.25] }, "style": "system" },
+    { "id": 17, "title": "L3",     "kind": "button", "size": "face", "radiusScale": 0.76, "group": "leftStick",  "offset": [-1.05, 1.00], "offsetUnit": "stick", "style": "thumb" },
+    { "id": 18, "title": "R3",     "kind": "button", "size": "face", "radiusScale": 0.76, "group": "rightStick", "offset": [1.05, 1.00], "offsetUnit": "stick", "style": "thumb" }
   ]
 }

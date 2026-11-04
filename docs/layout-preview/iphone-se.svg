@@ -57,10 +57,10 @@
 <text x="286.81" y="174.42" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="9.38" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">SELECT</text>
 <rect x="344.00" y="158.33" width="72.38" height="32.17" rx="14.74" fill="#111a29" stroke="#526681" stroke-width="1"/>
 <text x="380.19" y="174.42" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="9.38" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">START</text>
-<circle cx="153.83" cy="194.70" r="16.45" fill="#111a29" stroke="#63758e" stroke-width="1.2"/>
-<text x="153.83" y="194.70" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="9.54" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">L3</text>
-<circle cx="514.01" cy="278.68" r="16.45" fill="#111a29" stroke="#63758e" stroke-width="1.2"/>
-<text x="514.01" y="278.68" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="9.54" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">R3</text>
+<circle cx="37.31" cy="201.88" r="16.45" fill="#111a29" stroke="#63758e" stroke-width="1.2"/>
+<text x="37.31" y="201.88" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="9.54" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">L3</text>
+<circle cx="522.97" cy="285.86" r="16.45" fill="#111a29" stroke="#63758e" stroke-width="1.2"/>
+<text x="522.97" y="285.86" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="9.54" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">R3</text>
 </g>
 </g></g>
 <g transform="translate(767,86)">
@@ -80,48 +80,48 @@
 <rect x="0" y="47" width="375" height="1" fill="#2e425e"/>
 <rect x="0" y="52" width="375" height="615" fill="none" stroke="#4fd1ff" stroke-width="0.6" stroke-dasharray="2 3" opacity="0.5"/>
 <g transform="translate(0,52)">
-<circle cx="86.25" cy="178.35" r="37.50" fill="#0e1725" stroke="#455b78" stroke-width="2"/>
-<circle cx="86.25" cy="178.35" r="31.12" fill="#142133" stroke="#2a3d55" stroke-width="1"/>
-<circle cx="86.25" cy="178.35" r="17.25" fill="#324760" stroke="#7892b3" stroke-width="1.3"/>
-<circle cx="86.25" cy="178.35" r="10.70" fill="#354b65" stroke="#597493" stroke-width="1"/>
-<text x="86.25" y="228.85" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="9.00" font-weight="600" fill="#8597b0" text-anchor="middle" dominant-baseline="central">LEFT STICK</text>
-<circle cx="288.75" cy="178.35" r="37.50" fill="#0e1725" stroke="#455b78" stroke-width="2"/>
-<circle cx="288.75" cy="178.35" r="31.12" fill="#142133" stroke="#2a3d55" stroke-width="1"/>
-<circle cx="288.75" cy="178.35" r="17.25" fill="#324760" stroke="#7892b3" stroke-width="1.3"/>
-<circle cx="288.75" cy="178.35" r="10.70" fill="#354b65" stroke="#597493" stroke-width="1"/>
-<text x="288.75" y="228.85" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="9.00" font-weight="600" fill="#8597b0" text-anchor="middle" dominant-baseline="central">RIGHT STICK</text>
-<circle cx="288.75" cy="384.75" r="25.00" fill="#50432e" stroke="#63758e" stroke-width="1.2"/>
-<text x="288.75" y="384.75" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="19.25" font-weight="700" fill="#ffdc96" text-anchor="middle" dominant-baseline="central">Y</text>
-<circle cx="243.00" cy="430.50" r="25.00" fill="#25483c" stroke="#63758e" stroke-width="1.2"/>
-<text x="243.00" y="430.50" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="19.25" font-weight="700" fill="#a3f2ce" text-anchor="middle" dominant-baseline="central">X</text>
-<circle cx="334.50" cy="430.50" r="25.00" fill="#4e3138" stroke="#63758e" stroke-width="1.2"/>
-<text x="334.50" y="430.50" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="19.25" font-weight="700" fill="#ffb8c0" text-anchor="middle" dominant-baseline="central">B</text>
-<circle cx="288.75" cy="476.25" r="25.00" fill="#224762" stroke="#63758e" stroke-width="1.2"/>
-<text x="288.75" y="476.25" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="19.25" font-weight="700" fill="#b2ddff" text-anchor="middle" dominant-baseline="central">A</text>
-<rect x="63.25" y="377.37" width="46.00" height="46.00" rx="5.29" fill="#26374b" stroke="#6a7f97" stroke-width="1.2"/>
-<text x="86.25" y="400.37" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="13.34" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">▲</text>
-<rect x="63.25" y="437.63" width="46.00" height="46.00" rx="5.29" fill="#26374b" stroke="#6a7f97" stroke-width="1.2"/>
-<text x="86.25" y="460.63" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="13.34" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">▼</text>
-<rect x="33.12" y="407.50" width="46.00" height="46.00" rx="5.29" fill="#26374b" stroke="#6a7f97" stroke-width="1.2"/>
-<text x="56.12" y="430.50" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="13.34" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">◀</text>
-<rect x="93.38" y="407.50" width="46.00" height="46.00" rx="5.29" fill="#26374b" stroke="#6a7f97" stroke-width="1.2"/>
-<text x="116.38" y="430.50" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="13.34" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">▶</text>
-<rect x="-14.62" y="35.06" width="85.49" height="34.44" rx="15.07" fill="#111a29" stroke="#526681" stroke-width="1"/>
-<text x="28.12" y="52.28" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="17.83" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">L2</text>
-<rect x="32.26" y="35.06" width="85.49" height="34.44" rx="15.07" fill="#111a29" stroke="#526681" stroke-width="1"/>
-<text x="75.00" y="52.28" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="17.83" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">L1</text>
-<rect x="257.26" y="35.06" width="85.49" height="34.44" rx="15.07" fill="#111a29" stroke="#526681" stroke-width="1"/>
-<text x="300.00" y="52.28" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="17.83" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">R1</text>
-<rect x="304.13" y="35.06" width="85.49" height="34.44" rx="15.07" fill="#111a29" stroke="#526681" stroke-width="1"/>
-<text x="346.88" y="52.28" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="17.83" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">R2</text>
-<rect x="119.40" y="295.05" width="83.70" height="37.20" rx="17.05" fill="#111a29" stroke="#526681" stroke-width="1"/>
-<text x="161.25" y="313.65" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="10.85" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">SELECT</text>
-<rect x="171.90" y="295.05" width="83.70" height="37.20" rx="17.05" fill="#111a29" stroke="#526681" stroke-width="1"/>
-<text x="213.75" y="313.65" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="10.85" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">START</text>
-<circle cx="120.00" cy="211.35" r="19.00" fill="#111a29" stroke="#63758e" stroke-width="1.2"/>
-<text x="120.00" y="211.35" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="11.02" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">L3</text>
-<circle cx="322.50" cy="211.35" r="19.00" fill="#111a29" stroke="#63758e" stroke-width="1.2"/>
-<text x="322.50" y="211.35" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="11.02" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">R3</text>
+<circle cx="101.25" cy="485.85" r="56.25" fill="#0e1725" stroke="#455b78" stroke-width="2"/>
+<circle cx="101.25" cy="485.85" r="46.69" fill="#142133" stroke="#2a3d55" stroke-width="1"/>
+<circle cx="101.25" cy="485.85" r="25.88" fill="#324760" stroke="#7892b3" stroke-width="1.3"/>
+<circle cx="101.25" cy="485.85" r="16.04" fill="#354b65" stroke="#597493" stroke-width="1"/>
+<text x="101.25" y="555.10" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="9.00" font-weight="600" fill="#8597b0" text-anchor="middle" dominant-baseline="central">LEFT STICK</text>
+<circle cx="273.75" cy="485.85" r="56.25" fill="#0e1725" stroke="#455b78" stroke-width="2"/>
+<circle cx="273.75" cy="485.85" r="46.69" fill="#142133" stroke="#2a3d55" stroke-width="1"/>
+<circle cx="273.75" cy="485.85" r="25.88" fill="#324760" stroke="#7892b3" stroke-width="1.3"/>
+<circle cx="273.75" cy="485.85" r="16.04" fill="#354b65" stroke="#597493" stroke-width="1"/>
+<text x="273.75" y="555.10" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="9.00" font-weight="600" fill="#8597b0" text-anchor="middle" dominant-baseline="central">RIGHT STICK</text>
+<circle cx="273.75" cy="249.45" r="25.00" fill="#50432e" stroke="#63758e" stroke-width="1.2"/>
+<text x="273.75" y="249.45" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="19.25" font-weight="700" fill="#ffdc96" text-anchor="middle" dominant-baseline="central">Y</text>
+<circle cx="228.00" cy="295.20" r="25.00" fill="#25483c" stroke="#63758e" stroke-width="1.2"/>
+<text x="228.00" y="295.20" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="19.25" font-weight="700" fill="#a3f2ce" text-anchor="middle" dominant-baseline="central">X</text>
+<circle cx="319.50" cy="295.20" r="25.00" fill="#4e3138" stroke="#63758e" stroke-width="1.2"/>
+<text x="319.50" y="295.20" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="19.25" font-weight="700" fill="#ffb8c0" text-anchor="middle" dominant-baseline="central">B</text>
+<circle cx="273.75" cy="340.95" r="25.00" fill="#224762" stroke="#63758e" stroke-width="1.2"/>
+<text x="273.75" y="340.95" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="19.25" font-weight="700" fill="#b2ddff" text-anchor="middle" dominant-baseline="central">A</text>
+<rect x="78.25" y="242.07" width="46.00" height="46.00" rx="5.29" fill="#26374b" stroke="#6a7f97" stroke-width="1.2"/>
+<text x="101.25" y="265.07" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="13.34" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">▲</text>
+<rect x="78.25" y="302.33" width="46.00" height="46.00" rx="5.29" fill="#26374b" stroke="#6a7f97" stroke-width="1.2"/>
+<text x="101.25" y="325.33" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="13.34" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">▼</text>
+<rect x="48.12" y="272.20" width="46.00" height="46.00" rx="5.29" fill="#26374b" stroke="#6a7f97" stroke-width="1.2"/>
+<text x="71.12" y="295.20" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="13.34" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">◀</text>
+<rect x="108.38" y="272.20" width="46.00" height="46.00" rx="5.29" fill="#26374b" stroke="#6a7f97" stroke-width="1.2"/>
+<text x="131.38" y="295.20" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="13.34" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">▶</text>
+<rect x="7.89" y="29.61" width="66.72" height="26.88" rx="11.76" fill="#111a29" stroke="#526681" stroke-width="1"/>
+<text x="41.25" y="43.05" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="13.92" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">L2</text>
+<rect x="86.64" y="29.61" width="66.72" height="26.88" rx="11.76" fill="#111a29" stroke="#526681" stroke-width="1"/>
+<text x="120.00" y="43.05" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="13.92" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">L1</text>
+<rect x="221.64" y="29.61" width="66.72" height="26.88" rx="11.76" fill="#111a29" stroke="#526681" stroke-width="1"/>
+<text x="255.00" y="43.05" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="13.92" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">R1</text>
+<rect x="300.39" y="29.61" width="66.72" height="26.88" rx="11.76" fill="#111a29" stroke="#526681" stroke-width="1"/>
+<text x="333.75" y="43.05" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="13.92" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">R2</text>
+<rect x="107.06" y="138.00" width="70.88" height="31.50" rx="14.44" fill="#111a29" stroke="#526681" stroke-width="1"/>
+<text x="142.50" y="153.75" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="9.19" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">SELECT</text>
+<rect x="197.06" y="138.00" width="70.88" height="31.50" rx="14.44" fill="#111a29" stroke="#526681" stroke-width="1"/>
+<text x="232.50" y="153.75" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="9.19" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">START</text>
+<circle cx="42.19" cy="542.10" r="19.00" fill="#111a29" stroke="#63758e" stroke-width="1.2"/>
+<text x="42.19" y="542.10" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="11.02" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">L3</text>
+<circle cx="332.81" cy="542.10" r="19.00" fill="#111a29" stroke="#63758e" stroke-width="1.2"/>
+<text x="332.81" y="542.10" font-family="-apple-system, 'SF Pro Text', system-ui, 'Helvetica Neue', Arial, sans-serif" font-size="11.02" font-weight="700" fill="#d9e4f3" text-anchor="middle" dominant-baseline="central">R3</text>
 </g>
 </g></g>
 </svg>
