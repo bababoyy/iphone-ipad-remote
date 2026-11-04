@@ -3,6 +3,12 @@ on:
   push:
     branches: [main, experiment/virtual-gamepad, experiment/ble-link, experiment/native-uikit]
   workflow_dispatch:
+    inputs:
+      macos_runner:
+        description: macOS runner (use macos-15-intel when arm64 runners are out of capacity)
+        type: choice
+        options: [macos-15, macos-15-intel]
+        default: macos-15
 jobs:
   layout:
     # Cheap Linux job: layout.json schema, golden coordinates and SVG checks.
@@ -21,7 +27,7 @@ jobs:
           path: build/layout-preview
           if-no-files-found: error
   build:
-    runs-on: macos-15
+    runs-on: ${{ inputs.macos_runner || 'macos-15' }}
     steps:
       - uses: actions/checkout@v4
       - name: Check controller protocol and JS syntax
@@ -50,7 +56,7 @@ jobs:
           if-no-files-found: error
   iphone-ipa:
     if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/experiment/ble-link' || github.ref == 'refs/heads/experiment/native-uikit'
-    runs-on: macos-15
+    runs-on: ${{ inputs.macos_runner || 'macos-15' }}
     steps:
       - uses: actions/checkout@v4
       - name: Check native controller source invariants
